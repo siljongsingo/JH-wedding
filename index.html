@@ -6,25 +6,27 @@
 <title>이준환 · 최희수 결혼식 축의금 관리</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --gold:#9A6E1A;--gold2:#C49A3C;--pale:#F5EDD8;--paleb:#FBF7EE;
   --bg:#FAF7F2;--card:#FFFFFF;--text:#2C2416;--muted:#8A7560;
-  --border:#E2D4BE;--err:#B5341E;--ok:#4A7C59;
+  --border:#E2D4BE;--err:#B5341E;
   --font:'Noto Sans KR',sans-serif;--serif:'Noto Serif KR',serif;
-  --radius:12px;--radius-sm:8px;
+  --radius:12px;--hdr:58px;--side:220px;
 }
-html{height:100%}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
-/* ── LOGIN ── */
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px}
+
+/* ══ LOGIN ══════════════════════════════════════════════════════════════ */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
   background:radial-gradient(ellipse at 50% 0%,var(--pale) 0%,var(--bg) 55%)}
-.lcard{background:var(--card);border-radius:20px;padding:44px 36px;width:100%;max-width:360px;
-  box-shadow:0 8px 40px rgba(123,91,26,.12);text-align:center}
+.lcard{background:var(--card);border-radius:20px;padding:44px 36px;width:100%;max-width:380px;
+  box-shadow:0 8px 40px rgba(123,91,26,.14);text-align:center}
 .lheart{font-size:36px;color:var(--gold);margin-bottom:10px}
-.ltitle{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:5px}
+.ltitle{font-family:var(--serif);font-size:23px;font-weight:700;color:var(--gold);margin-bottom:5px}
 .ldate{font-size:13px;color:var(--muted);margin-bottom:28px}
 .ldivider{width:36px;height:2px;background:var(--pale);margin:0 auto 22px}
 .llbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:8px;text-align:left}
@@ -38,71 +40,85 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   border-radius:10px;font-size:16px;font-family:var(--font);font-weight:700;cursor:pointer;letter-spacing:2px;transition:.2s}
 .lbtn:hover{background:var(--gold2)}
 .lhint{font-size:11px;color:var(--muted);margin-top:14px}
-/* ── APP SHELL ── */
-#app{display:none;flex-direction:column;min-height:100vh}
-.ahdr{background:var(--gold);color:#fff;padding:13px 16px;display:flex;align-items:center;
-  justify-content:space-between;position:sticky;top:0;z-index:100}
-.htitle{font-family:var(--serif);font-size:16px;font-weight:700}
-.hsub{font-size:11px;opacity:.75;margin-top:1px}
-.hright{text-align:right;font-size:11px}
-.hstat{opacity:.85;margin-top:2px}
-.hsync{display:inline-block;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;margin-bottom:2px}
+
+/* ══ APP SHELL ══════════════════════════════════════════════════════════ */
+#app{display:none;min-height:100vh}
+
+/* HEADER */
+.ahdr{background:var(--gold);color:#fff;height:var(--hdr);padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200}
+.htitle{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.3px}
+.hsub{font-size:11px;opacity:.75;margin-top:2px}
+.hright{display:flex;align-items:center;gap:12px;font-size:12px}
+.hstat-wrap{text-align:right}
+.hstat{opacity:.9;font-size:13px;font-weight:500}
+.hsync{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:10px;font-size:11px;display:none}
+
+/* BODY LAYOUT — mobile: flex column, desktop: grid */
+.body-layout{display:flex;flex-direction:column;min-height:calc(100vh - var(--hdr))}
+
+/* SIDEBAR / TABBAR */
 .tabbar{display:flex;background:var(--card);border-bottom:1px solid var(--border);
-  position:sticky;top:57px;z-index:99}
-.tbtn{flex:1;padding:10px 2px;border:none;background:none;cursor:pointer;
+  position:sticky;top:var(--hdr);z-index:100}
+.tbtn{flex:1;padding:10px 2px 9px;border:none;background:none;cursor:pointer;
   font-family:var(--font);font-size:10px;color:var(--muted);
   border-bottom:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:.15s}
 .tbtn.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
 .ticon{font-size:18px}
-.content{flex:1;padding:14px}
-/* ── CARDS ── */
+
+/* MAIN CONTENT */
+.content{flex:1;padding:16px}
+
+/* ══ CARDS ══════════════════════════════════════════════════════════════ */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(123,91,26,.06)}
-.ctitle{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--gold);margin-bottom:15px;
-  display:flex;align-items:center;gap:6px}
-/* ── FORM ── */
+  padding:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(123,91,26,.06)}
+.ctitle{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--gold);margin-bottom:16px;
+  display:flex;align-items:center;gap:7px}
+
+/* ══ FORM ═══════════════════════════════════════════════════════════════ */
 .frow{margin-bottom:13px;position:relative}
 .flbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:5px}
 .fin{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;
   font-size:14px;font-family:var(--font);color:var(--text);background:#fff;outline:none;transition:.15s}
 .fin:focus{border-color:var(--gold)}
-.aprev{font-size:12px;color:var(--gold);font-weight:700;margin-top:4px;min-height:16px}
+.aprev{font-size:13px;color:var(--gold);font-weight:700;margin-top:4px;min-height:17px}
 .prerow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.prebtn{padding:5px 10px;background:var(--paleb);border:1.5px solid var(--pale);border-radius:20px;
+.prebtn{padding:5px 11px;background:var(--paleb);border:1.5px solid var(--pale);border-radius:20px;
   font-size:12px;color:var(--gold);cursor:pointer;font-family:var(--font);font-weight:500;transition:.1s}
-.prebtn:hover{background:var(--pale)}
+.prebtn:hover,.prebtn:active{background:var(--pale)}
 .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
 .tbtnx{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:transparent;
   color:var(--muted);font-size:12px;cursor:pointer;font-family:var(--font);transition:.1s}
 .tbtnx.on{background:var(--pale);border-color:var(--gold2);color:var(--gold);font-weight:700}
-.subbtn{width:100%;padding:14px;background:var(--gold);color:#fff;border:none;
+.subbtn{width:100%;padding:13px;background:var(--gold);color:#fff;border:none;
   border-radius:10px;font-size:15px;font-family:var(--font);font-weight:700;cursor:pointer;letter-spacing:1px;transition:.2s;margin-top:4px}
 .subbtn:hover{background:var(--gold2)}
-.canbtn{width:100%;padding:11px;background:transparent;color:var(--muted);border:1.5px solid var(--border);
+.canbtn{width:100%;padding:10px;background:transparent;color:var(--muted);border:1.5px solid var(--border);
   border-radius:10px;font-size:13px;font-family:var(--font);cursor:pointer;margin-top:8px}
-/* ── AUTOCOMPLETE ── */
 .aclist{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--gold2);
   border-top:none;border-radius:0 0 9px 9px;z-index:50;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .acitem{padding:9px 13px;font-size:13px;cursor:pointer;color:var(--text)}
 .acitem:hover{background:var(--paleb)}
-/* ── SUMMARY BAR ── */
+
+/* ══ LIST ════════════════════════════════════════════════════════════════ */
 .sumbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:13px}
-.schip{border-radius:10px;padding:11px 8px;text-align:center;color:#fff}
-.scval{font-family:var(--serif);font-size:16px;font-weight:700}
+.schip{border-radius:10px;padding:12px 10px;text-align:center;color:#fff}
+.scval{font-family:var(--serif);font-size:17px;font-weight:700}
 .sclbl{font-size:10px;opacity:.85;margin-top:2px}
-/* ── SEARCH ── */
 .srow{display:flex;gap:7px;margin-bottom:10px}
 .sinp{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;
   font-size:13px;font-family:var(--font);color:var(--text);background:#fff;outline:none}
 .sinp:focus{border-color:var(--gold)}
 .ssel{border:1.5px solid var(--border);border-radius:9px;padding:10px 7px;
-  font-size:12px;font-family:var(--font);background:#fff;color:var(--text);outline:none}
-/* ── ENTRY CARD ── */
+  font-size:12px;font-family:var(--font);background:#fff;color:var(--text);outline:none;cursor:pointer}
+
+/* Mobile card view */
 .ecard{background:var(--card);border:1px solid var(--border);border-radius:9px;
   padding:12px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;
   box-shadow:0 1px 5px rgba(123,91,26,.04)}
 .enum{font-size:10px;color:var(--gold);background:var(--pale);border-radius:6px;
-  width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;margin-top:2px}
 .emain{flex:1;min-width:0}
 .ename{font-weight:700;font-size:14px}
 .eorg{font-size:12px;color:var(--muted);margin-top:1px}
@@ -110,93 +126,227 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .etag{font-size:10px;background:var(--pale);color:var(--gold);padding:2px 7px;border-radius:20px}
 .enote{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic}
 .ebtns{display:flex;gap:5px;margin-top:6px}
-.eebtn{padding:4px 9px;border-radius:6px;font-size:11px;cursor:pointer;font-family:var(--font);border:1px solid}
+.eebtn{padding:4px 9px;border-radius:6px;font-size:11px;cursor:pointer;font-family:var(--font);border:1px solid;transition:.1s}
 .eebtn.ed{background:var(--paleb);color:var(--gold);border-color:var(--pale)}
 .eebtn.dl{background:#FFF5F3;color:var(--err);border-color:#F5C9C3}
 .eamt{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold)}
 .eamt2{font-size:10px;color:var(--muted)}
-/* ── ANALYTICS ── */
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
-.sbox{background:var(--card);border:1px solid var(--border);border-radius:9px;
-  padding:13px;text-align:center}
-.sval{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--gold)}
+
+/* Desktop table view */
+.list-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.list-tbl thead tr{background:var(--gold);color:#fff;position:sticky;top:0}
+.list-tbl th{padding:10px 12px;text-align:left;font-weight:500;font-size:12px;white-space:nowrap}
+.list-tbl tbody tr{border-bottom:1px solid var(--border);transition:.12s}
+.list-tbl tbody tr:hover{background:var(--paleb)}
+.list-tbl td{padding:10px 12px;vertical-align:middle}
+.list-tbl .td-num{color:var(--muted);font-size:12px;width:36px;text-align:center}
+.list-tbl .td-name{font-weight:700;min-width:80px}
+.list-tbl .td-org{color:var(--muted);min-width:80px}
+.list-tbl .td-amt{font-family:var(--serif);font-weight:700;color:var(--gold);text-align:right;white-space:nowrap}
+.list-tbl .td-tag{min-width:100px}
+.list-tbl .td-note{color:var(--muted);font-size:12px;max-width:160px}
+.list-tbl .td-act{white-space:nowrap;text-align:right}
+
+/* ══ ANALYTICS ══════════════════════════════════════════════════════════ */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sbox{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:14px;text-align:center}
+.sval{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold)}
 .slbl{font-size:11px;color:var(--muted);margin-top:2px}
-.dtbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-.dtbl th{background:var(--gold);color:#fff;padding:8px 10px;text-align:left;font-weight:500;font-size:11px}
-.dtbl td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:12px}
+.dtbl th{background:var(--gold);color:#fff;padding:8px 11px;text-align:left;font-weight:500;font-size:11px}
+.dtbl td{padding:8px 11px;border-bottom:1px solid var(--border)}
 .dtbl tr:last-child td{border-bottom:none}
 .dtbl tr:hover td{background:var(--paleb)}
 .bw{background:var(--border);border-radius:3px;height:4px;margin-top:3px;overflow:hidden}
 .bf{height:100%;background:var(--gold2);border-radius:3px;transition:width .5s}
-/* ── SETTINGS ── */
-.ssec{margin-bottom:18px}
-.stitle{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;
-  padding-bottom:7px;border-bottom:1px solid var(--border)}
+.a-pair{display:grid;grid-template-columns:1fr;gap:0}
+/* ══ ANALYTICS CHARTS ════════════════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold)}
+.kpi-icon{font-size:22px;margin-bottom:6px;opacity:.7}
+.kpi-val{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold);line-height:1.1}
+.kpi-lbl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+.chart-h240{position:relative;height:240px;width:100%}
+.chart-h200{position:relative;height:200px;width:100%}
+.chart-h260{position:relative;height:260px;width:100%}
+.donut-wrap{display:flex;flex-direction:column;align-items:center}
+.donut-canvas{position:relative;height:200px;width:100%;max-width:240px;margin:0 auto}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.donut-center-val{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold)}
+.donut-center-lbl{font-size:10px;color:var(--muted);margin-top:1px}
+.tag-legend{margin-top:12px;width:100%}
+.tag-legend-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.1s}
+.tag-legend-row:last-child{border-bottom:none}
+.tag-legend-row:hover{background:var(--paleb);margin:0 -6px;padding:5px 6px;border-radius:6px}
+.tag-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tag-name{flex:1;font-size:12px}
+.tag-cnt{font-size:11px;color:var(--muted);min-width:30px;text-align:right}
+.tag-amt{font-size:12px;font-weight:700;color:var(--gold);min-width:60px;text-align:right}
+.top-list{}
+.top-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);transition:.1s}
+.top-row:last-child{border-bottom:none}
+.top-row:hover{background:var(--paleb);margin:0 -6px;padding:10px 6px;border-radius:8px}
+.top-badge{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.top-name{font-weight:700;font-size:14px}
+.top-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.top-amt{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);white-space:nowrap}
+@media(min-width:600px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+
+
+/* ══ SETTINGS ═══════════════════════════════════════════════════════════ */
+.ssec{margin-bottom:20px}
+.stitle{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
 .codeblk{background:#1a1a2e;color:#E8D5A3;font-family:monospace;font-size:10px;
-  padding:12px;border-radius:9px;overflow-x:auto;white-space:pre;line-height:1.5;
-  max-height:160px;overflow-y:auto}
+  padding:13px;border-radius:9px;overflow-x:auto;white-space:pre;line-height:1.5;max-height:160px;overflow-y:auto}
 .copybtn{background:var(--paleb);color:var(--gold);border:1.5px solid var(--pale);
   border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;margin-top:6px;font-family:var(--font)}
 .arow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .abtn{padding:8px 13px;border:1.5px solid var(--border);border-radius:9px;
   background:#fff;font-size:12px;cursor:pointer;font-family:var(--font);color:var(--text);transition:.15s}
 .abtn:hover{border-color:var(--gold);color:var(--gold)}
-.abtn.pri{background:var(--gold);color:#fff;border-color:var(--gold)}
-.abtn.pri:hover{background:var(--gold2)}
 .abtn.dng{background:#FFF5F3;color:var(--err);border-color:#F5C9C3}
 .hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
-/* ── PRINT TAB ── */
-.xbtn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;
-  font-family:var(--font);font-weight:700;cursor:pointer;margin-bottom:10px;transition:.2s}
+
+/* ══ PRINT TAB ══════════════════════════════════════════════════════════ */
+.xbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.xbtn{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;
+  font-family:var(--font);font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .xbtn.xl{background:#1D6F42;color:#fff}
 .xbtn.xl:hover{background:#165c35}
 .xbtn.pt{background:var(--gold);color:#fff}
 .xbtn.pt:hover{background:var(--gold2)}
-/* ── NOTIFICATION ── */
+
+/* ══ NOTIFICATION ═══════════════════════════════════════════════════════ */
 #notif{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  background:var(--text);color:#fff;padding:10px 22px;border-radius:30px;
+  background:var(--text);color:#fff;padding:11px 24px;border-radius:30px;
   font-size:13px;font-family:var(--font);z-index:9999;display:none;
   white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);
-  animation:slide-up .25s ease;pointer-events:none}
-@keyframes slide-up{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  animation:slup .25s ease;pointer-events:none}
+@keyframes slup{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .notif-err{background:var(--err)!important}
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:36px 0;color:var(--muted);font-size:13px}
-/* ── PRINT STYLES ── */
+.empty{text-align:center;padding:40px 0;color:var(--muted);font-size:13px}
+
+/* ══ PRINT (A4) ══════════════════════════════════════════════════════════ */
 @media print{
-  body{background:#fff}
-  .ahdr,.tabbar,.content,.noPrint{display:none!important}
-  #printview{display:block!important;padding:20px}
-  #printview table{width:100%;border-collapse:collapse;font-size:11px}
-  #printview th{background:#7B5B1A!important;color:#fff!important;padding:7px 9px;
-    border:1px solid #ccc;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #printview td{padding:6px 9px;border:1px solid #ddd}
-  #printview .phdr{text-align:center;margin-bottom:16px}
-  #printview .phdr h1{font-family:var(--serif);font-size:18px;font-weight:700;color:#7B5B1A}
-  #printview .psum{margin-top:14px;padding:10px 14px;background:#F5EDD8;border-radius:6px;font-size:12px}
+  @page{size:A4 portrait;margin:18mm 20mm 20mm 20mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body,html{background:#fff!important;margin:0;padding:0}
+  #app,#loginScreen,#notif{display:none!important}
+  #printview{display:block!important}
+  /* page break handling */
+  .pv-table tr{page-break-inside:avoid}
+  .pv-footer{page-break-inside:avoid}
 }
 #printview{display:none}
-/* ── RESPONSIVE ── */
-@media(max-width:480px){
-  .lcard{padding:36px 24px}
-  .content{padding:11px}
+/* print preview card in screen */
+#printPreview .pv-wrap{font-family:'Noto Sans KR',sans-serif}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── MOBILE (<600px) ─────────────────────────────────────────────────── */
+@media(max-width:599px){
   .card{padding:15px}
-  .sumbar .scval{font-size:14px}
+  .content{padding:12px}
+  .scval{font-size:15px}
+  .xbtns{grid-template-columns:1fr}
 }
+
+/* ── TABLET (600~899px) ──────────────────────────────────────────────── */
 @media(min-width:600px){
-  .content,.lcard{max-width:560px;margin-left:auto;margin-right:auto}
-  .ahdr,.tabbar{justify-content:center}
-  .ahdr>*,.tabbar>*{max-width:560px}
-  .ahdr{flex-direction:row;justify-content:space-between}
+  .body-layout,.content,.sumbar,.sgrid{/* widen slightly */}
+  .content{padding:18px 20px}
+  .sgrid{grid-template-columns:1fr 1fr 1fr 1fr}
+  .sumbar{gap:10px}
+  .scval{font-size:18px}
+  /* 2-col form */
+  .form-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+  .form-2col .frow{margin-bottom:13px}
 }
+
+/* ── DESKTOP (≥900px) ────────────────────────────────────────────────── */
 @media(min-width:900px){
-  .content,.lcard{max-width:700px}
+  /* Sidebar layout */
+  .body-layout{flex-direction:row;align-items:flex-start}
+
+  .tabbar{
+    flex-direction:column;
+    width:var(--side);
+    min-width:var(--side);
+    border-bottom:none;
+    border-right:1px solid var(--border);
+    position:sticky;
+    top:var(--hdr);
+    height:calc(100vh - var(--hdr));
+    overflow-y:auto;
+    background:var(--card);
+    padding:12px 0;
+    gap:2px;
+  }
+  .tbtn{
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:12px;
+    padding:13px 22px;
+    font-size:14px;
+    border-bottom:none;
+    border-left:3px solid transparent;
+    border-right:none;
+    width:100%;
+    text-align:left;
+  }
+  .tbtn.on{
+    color:var(--gold);
+    border-left-color:var(--gold);
+    border-bottom-color:transparent;
+    background:var(--paleb);
+    font-weight:700;
+  }
+  .ticon{font-size:20px}
+
+  .content{
+    flex:1;
+    padding:28px 32px;
+    min-width:0;
+    max-width:calc(100vw - var(--side));
+  }
+  .content>div{max-width:960px}
+
+  /* Header wider info */
+  .htitle{font-size:18px}
+  .hright{gap:20px}
+  .hstat{font-size:14px}
+
+  /* Analytics 2-col */
+  .a-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .a-pair .card{margin-bottom:0}
+
+  /* Stats 4-col */
+  .sgrid{grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .sval{font-size:20px}
+
+  /* Print buttons already 2-col */
+  .xbtns{grid-template-columns:1fr 1fr;max-width:540px}
+
+  /* Settings 2-col */
+  .settings-pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .settings-pair .ssec{margin-bottom:0}
+}
+
+@media(min-width:1200px){
+  .content{padding:32px 40px}
+  .content>div{max-width:1100px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── LOGIN SCREEN ── -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="lcard">
     <div class="lheart">💍</div>
@@ -207,11 +357,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="lpw" id="pw" type="password" placeholder="••••" maxlength="8" inputmode="numeric">
     <div class="lerr" id="pwErr"></div>
     <button class="lbtn" id="loginBtn">입 장</button>
-    <div class="lhint">초기 비밀번호: 0914</div>
+    
   </div>
 </div>
 
-<!-- ── MAIN APP ── -->
+<!-- MAIN APP -->
 <div id="app">
   <header class="ahdr">
     <div>
@@ -219,186 +369,232 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="hsub">2026년 5월 31일 결혼식 축의금</div>
     </div>
     <div class="hright">
-      <div id="syncBadge" class="hsync" style="display:none"></div>
-      <div class="hstat" id="hStat">0명 · 0원</div>
+      <div id="syncBadge" class="hsync"></div>
+      <div class="hstat-wrap">
+        <div class="hstat" id="hStat">0명 · 0원</div>
+      </div>
     </div>
   </header>
 
-  <nav class="tabbar" id="tabbar">
-    <button class="tbtn on" data-t="entry"><i class="ti ti-pencil ticon"></i>입력</button>
-    <button class="tbtn" data-t="list"><i class="ti ti-list ticon"></i>목록</button>
-    <button class="tbtn" data-t="analytics"><i class="ti ti-chart-bar ticon"></i>분석</button>
-    <button class="tbtn" data-t="settings"><i class="ti ti-settings ticon"></i>설정</button>
-    <button class="tbtn" data-t="print"><i class="ti ti-printer ticon"></i>인쇄</button>
-  </nav>
+  <div class="body-layout">
+    <!-- SIDEBAR / TAB BAR -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tbtn on" data-t="entry"><i class="ti ti-pencil ticon"></i><span>입력</span></button>
+      <button class="tbtn" data-t="list"><i class="ti ti-list ticon"></i><span>목록</span></button>
+      <button class="tbtn" data-t="analytics"><i class="ti ti-chart-bar ticon"></i><span>분석</span></button>
+      <button class="tbtn" data-t="settings"><i class="ti ti-settings ticon"></i><span>설정</span></button>
+      <button class="tbtn" data-t="print"><i class="ti ti-printer ticon"></i><span>인쇄/내보내기</span></button>
+    </nav>
 
-  <main class="content">
+    <!-- CONTENT -->
+    <main class="content">
 
-    <!-- ENTRY -->
-    <div id="tab-entry">
-      <div class="card">
-        <div class="ctitle" id="formTitle"><i class="ti ti-pencil"></i> 축의금 입력</div>
-        <div class="frow">
-          <div class="flbl">이름 *</div>
-          <input class="fin" id="fName" placeholder="홍길동">
-        </div>
-        <div class="frow">
-          <div class="flbl">소속</div>
-          <input class="fin" id="fOrg" placeholder="회사 / 학교 / 가족" autocomplete="off">
-          <div class="aclist" id="acList"></div>
-        </div>
-        <div class="frow">
-          <div class="flbl">금액 * (만원 단위 입력)</div>
-          <input class="fin" id="fAmt" type="number" placeholder="예: 5 → 50,000원"
-            style="font-size:20px;font-weight:700" inputmode="numeric">
-          <div class="aprev" id="amtPrev"></div>
-          <div class="prerow" id="preRow"></div>
-        </div>
-        <div class="frow">
-          <div class="flbl">분류 태그</div>
-          <div class="tagrow" id="tagRow"></div>
-        </div>
-        <div class="frow">
-          <div class="flbl">비고</div>
-          <input class="fin" id="fNote" placeholder="메모 사항">
-        </div>
-        <button class="subbtn" id="subBtn">등록하기</button>
-        <button class="canbtn" id="canBtn" style="display:none">취소</button>
-      </div>
-    </div>
-
-    <!-- LIST -->
-    <div id="tab-list" style="display:none">
-      <div class="sumbar">
-        <div class="schip" style="background:var(--gold)"><div class="scval" id="sTotCnt">0</div><div class="sclbl">총 인원</div></div>
-        <div class="schip" style="background:var(--gold2)"><div class="scval" id="sTotAmt">0</div><div class="sclbl">총 금액</div></div>
-        <div class="schip" style="background:#8B8070"><div class="scval" id="sAvg">0</div><div class="sclbl">평균</div></div>
-      </div>
-      <div class="srow">
-        <input class="sinp" id="searchInp" placeholder="🔍 이름·소속·메모 검색">
-        <select class="ssel" id="sortSel">
-          <option value="time">최근순</option>
-          <option value="amount">금액순</option>
-          <option value="name">이름순</option>
-        </select>
-      </div>
-      <div class="tagrow" id="filterTagRow" style="margin-bottom:10px"></div>
-      <div id="entryList"></div>
-    </div>
-
-    <!-- ANALYTICS -->
-    <div id="tab-analytics" style="display:none">
-      <div class="sgrid">
-        <div class="sbox"><div class="sval" id="aTotal">0</div><div class="slbl">총 금액</div></div>
-        <div class="sbox"><div class="sval" id="aCnt">0</div><div class="slbl">총 인원</div></div>
-        <div class="sbox"><div class="sval" id="aAvg">0</div><div class="slbl">평균 금액</div></div>
-        <div class="sbox"><div class="sval" id="aMax">0</div><div class="slbl">최고 금액</div></div>
-      </div>
-      <div class="card">
-        <div class="ctitle"><i class="ti ti-building"></i> 소속별 현황</div>
-        <div id="aOrg"></div>
-      </div>
-      <div class="card">
-        <div class="ctitle"><i class="ti ti-tag"></i> 분류(태그)별 현황</div>
-        <div id="aTag"></div>
-      </div>
-      <div class="card">
-        <div class="ctitle"><i class="ti ti-coins"></i> 금액대별 분포</div>
-        <div id="aBkt"></div>
-      </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="tab-settings" style="display:none">
-      <div class="card">
-        <div class="ctitle"><i class="ti ti-settings"></i> 연동 설정</div>
-
-        <div class="ssec">
-          <div class="stitle"><i class="ti ti-brand-github"></i> GitHub Gist 저장 (선택)</div>
-          <div class="frow"><div class="flbl">GitHub Personal Access Token</div>
-            <input class="fin" id="sGhTok" type="password" placeholder="ghp_xxxxxxxxxxxx"></div>
-          <div class="frow"><div class="flbl">Gist ID (생성 후 자동 입력됩니다)</div>
-            <input class="fin" id="sGistId" placeholder="Gist 생성 버튼 클릭"></div>
-          <div class="arow">
-            <button class="abtn" id="btnNewGist">새 Gist 생성</button>
-            <button class="abtn" id="btnSaveGist">저장</button>
-            <button class="abtn" id="btnLoadGist">불러오기</button>
+      <!-- ── ENTRY ── -->
+      <div id="tab-entry">
+        <div class="card">
+          <div class="ctitle" id="formTitle"><i class="ti ti-pencil"></i> 축의금 입력</div>
+          <!-- 이름 + 소속 (2컬럼) -->
+          <div class="form-2col">
+            <div class="frow">
+              <div class="flbl">이름 *</div>
+              <input class="fin" id="fName" placeholder="홍길동">
+            </div>
+            <div class="frow">
+              <div class="flbl">소속</div>
+              <input class="fin" id="fOrg" placeholder="회사 / 학교 / 가족" autocomplete="off">
+              <div class="aclist" id="acList"></div>
+            </div>
           </div>
-          <div class="hint">
-            github.com → Settings → Developer settings →<br>
-            Personal access tokens → <strong>gist 권한</strong>으로 토큰 생성
+          <!-- 금액 -->
+          <div class="frow">
+            <div class="flbl">금액 * (만원 단위로 입력)</div>
+            <input class="fin" id="fAmt" type="number" placeholder="예: 5  →  50,000원"
+              style="font-size:20px;font-weight:700;max-width:280px" inputmode="numeric">
+            <div class="aprev" id="amtPrev"></div>
+            <div class="prerow" id="preRow"></div>
           </div>
-        </div>
-
-        <div class="ssec">
-          <div class="stitle"><i class="ti ti-table"></i> Google Sheets 연동 (선택)</div>
-          <div class="hint" style="margin-bottom:9px">
-            아래 코드를 구글 시트 Apps Script에 배포하면,<br>
-            입력할 때마다 구글 시트에 자동 저장됩니다.
+          <!-- 태그 -->
+          <div class="frow">
+            <div class="flbl">분류 태그</div>
+            <div class="tagrow" id="tagRow"></div>
           </div>
-          <div class="codeblk" id="scriptCode"></div>
-          <button class="copybtn" id="btnCopy"><i class="ti ti-copy"></i> 코드 복사</button>
-          <div class="frow" style="margin-top:12px">
-            <div class="flbl">배포 URL (Web App URL)</div>
-            <input class="fin" id="sSheetsUrl" placeholder="https://script.google.com/macros/s/...">
+          <!-- 비고 -->
+          <div class="frow">
+            <div class="flbl">비고</div>
+            <input class="fin" id="fNote" placeholder="메모 사항" style="max-width:480px">
           </div>
-          <div class="arow">
-            <button class="abtn" id="btnSyncNow">지금 동기화</button>
-          </div>
-        </div>
-
-        <div class="ssec">
-          <div class="stitle"><i class="ti ti-tags"></i> 커스텀 태그 추가</div>
-          <input class="fin" id="sCustomTags" placeholder="이자영, 대학친구, 동네이웃 (쉼표로 구분)">
-          <div class="hint">기본 태그(가족·친척·친구·교회·직장·학교·이웃)에 추가됩니다</div>
-        </div>
-
-        <button class="subbtn" id="btnSave">설정 저장</button>
-
-        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
-          <div class="stitle" style="color:var(--err)"><i class="ti ti-alert-triangle"></i> 데이터 관리</div>
-          <div class="arow">
-            <button class="abtn dng" id="btnClear">전체 초기화</button>
-            <button class="abtn" id="btnJsonBackup">JSON 백업</button>
+          <div style="display:flex;gap:10px;max-width:480px">
+            <button class="subbtn" id="subBtn">등록하기</button>
+            <button class="canbtn" id="canBtn" style="display:none">취소</button>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- PRINT -->
-    <div id="tab-print" style="display:none">
-      <button class="xbtn xl" id="btnXlsx"><i class="ti ti-file-spreadsheet"></i> 엑셀(.xlsx) 다운로드</button>
-      <button class="xbtn pt" id="btnPrint"><i class="ti ti-printer"></i> PDF 인쇄 / 저장</button>
-      <div class="card" id="printPreview"></div>
-    </div>
+      <!-- ── LIST ── -->
+      <div id="tab-list" style="display:none">
+        <div class="sumbar">
+          <div class="schip" style="background:var(--gold)"><div class="scval" id="sTotCnt">0</div><div class="sclbl">총 인원</div></div>
+          <div class="schip" style="background:var(--gold2)"><div class="scval" id="sTotAmt">0</div><div class="sclbl">총 금액</div></div>
+          <div class="schip" style="background:#8B8070"><div class="scval" id="sAvg">0</div><div class="sclbl">평균</div></div>
+        </div>
+        <div class="srow">
+          <input class="sinp" id="searchInp" placeholder="🔍  이름 · 소속 · 메모 검색">
+          <select class="ssel" id="sortSel">
+            <option value="time">최근 입력순</option>
+            <option value="amount">금액 높은순</option>
+            <option value="name">이름순</option>
+          </select>
+        </div>
+        <div class="tagrow" id="filterTagRow" style="margin-bottom:12px"></div>
+        <div id="entryList"></div>
+      </div>
 
-  </main>
-</div>
+      <!-- ── ANALYTICS ── -->
+      <div id="tab-analytics" style="display:none">
+        <!-- KPI -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon"><i class="ti ti-users" style="color:var(--gold)"></i></div>
+            <div class="kpi-val" id="aTotal">0</div>
+            <div class="kpi-lbl">총 인원</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i class="ti ti-coins" style="color:var(--gold)"></i></div>
+            <div class="kpi-val" id="aCnt">0</div>
+            <div class="kpi-lbl">총 금액</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i class="ti ti-chart-line" style="color:var(--gold)"></i></div>
+            <div class="kpi-val" id="aAvg">0</div>
+            <div class="kpi-lbl">1인 평균</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon"><i class="ti ti-trophy" style="color:var(--gold)"></i></div>
+            <div class="kpi-val" id="aMax">0</div>
+            <div class="kpi-lbl">최고 금액</div>
+          </div>
+        </div>
 
-<!-- Notification -->
+        <!-- Row 1: 도넛 + 소속별 가로 막대 -->
+        <div class="a-pair">
+          <div class="card">
+            <div class="ctitle"><i class="ti ti-chart-pie"></i> 분류(태그)별 현황</div>
+            <div class="donut-wrap">
+              <div class="donut-canvas" style="position:relative">
+                <canvas id="chartTag"></canvas>
+                <div class="donut-center" id="donutCenter">
+                  <div class="donut-center-val" id="donutVal">-</div>
+                  <div class="donut-center-lbl">총 인원</div>
+                </div>
+              </div>
+              <div class="tag-legend" id="tagLegend"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ctitle"><i class="ti ti-building"></i> 소속별 Top 10</div>
+            <div class="chart-h260"><canvas id="chartOrg"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Row 2: 금액대별 + 시간대별 -->
+        <div class="a-pair" style="margin-top:14px">
+          <div class="card">
+            <div class="ctitle"><i class="ti ti-chart-bar"></i> 금액대별 인원 분포</div>
+            <div class="chart-h200"><canvas id="chartBkt"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="ctitle"><i class="ti ti-clock"></i> 시간대별 접수 현황
+              <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:4px">5분 단위</span>
+            </div>
+            <div id="timeStats" style="margin-bottom:10px;min-height:22px;display:flex;flex-wrap:wrap;gap:4px"></div>
+            <div class="chart-h240"><canvas id="chartTime"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Top 10 -->
+        <div class="card" style="margin-top:14px">
+          <div class="ctitle"><i class="ti ti-list-numbers"></i> 축의금 순위 Top 10</div>
+          <div class="top-list" id="aTop"></div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div id="tab-settings" style="display:none">
+        <div class="card">
+          <div class="ctitle"><i class="ti ti-settings"></i> 연동 설정</div>
+          <div class="settings-pair">
+            <div class="ssec">
+              <div class="stitle"><i class="ti ti-brand-github"></i> GitHub Gist 저장 (선택)</div>
+              <div class="frow"><div class="flbl">GitHub Personal Access Token</div>
+                <input class="fin" id="sGhTok" type="password" placeholder="ghp_xxxxxxxxxxxx"></div>
+              <div class="frow"><div class="flbl">Gist ID (생성 후 자동 입력)</div>
+                <input class="fin" id="sGistId" placeholder="Gist 생성 버튼 클릭"></div>
+              <div class="arow">
+                <button class="abtn" id="btnNewGist">새 Gist 생성</button>
+                <button class="abtn" id="btnSaveGist">저장</button>
+                <button class="abtn" id="btnLoadGist">불러오기</button>
+              </div>
+              <div class="hint">github.com → Settings → Developer settings →<br>Personal access tokens → <strong>gist 권한</strong>으로 생성</div>
+            </div>
+            <div class="ssec">
+              <div class="stitle"><i class="ti ti-table"></i> Google Sheets 연동 (선택)</div>
+              <div class="hint" style="margin-bottom:8px">Apps Script 코드를 구글 시트에 배포하면 입력마다 자동 저장됩니다.</div>
+              <div class="codeblk" id="scriptCode"></div>
+              <button class="copybtn" id="btnCopy"><i class="ti ti-copy"></i> 코드 복사</button>
+              <div class="frow" style="margin-top:11px"><div class="flbl">배포 URL (Web App URL)</div>
+                <input class="fin" id="sSheetsUrl" placeholder="https://script.google.com/macros/s/..."></div>
+              <div class="arow"><button class="abtn" id="btnSyncNow">지금 동기화</button></div>
+            </div>
+          </div>
+
+          <div class="ssec" style="margin-top:20px">
+            <div class="stitle"><i class="ti ti-tags"></i> 커스텀 태그 추가</div>
+            <input class="fin" id="sCustomTags" placeholder="이자영, 대학친구, 동네이웃 (쉼표로 구분)" style="max-width:440px">
+            <div class="hint">기본 태그(가족·친척·친구·교회·직장·학교·이웃)에 추가됩니다</div>
+          </div>
+
+          <button class="subbtn" style="max-width:240px" id="btnSave">설정 저장</button>
+
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+            <div class="stitle" style="color:var(--err)"><i class="ti ti-alert-triangle"></i> 데이터 관리</div>
+            <div class="arow">
+              <button class="abtn dng" id="btnClear">전체 초기화</button>
+              <button class="abtn" id="btnJsonBackup"><i class="ti ti-download"></i> JSON 백업</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PRINT / EXPORT ── -->
+      <div id="tab-print" style="display:none">
+        <div class="xbtns">
+          <button class="xbtn xl" id="btnXlsx"><i class="ti ti-file-spreadsheet"></i> 엑셀(.xlsx) 다운로드</button>
+          <button class="xbtn pt" id="btnPrint"><i class="ti ti-printer"></i> PDF 인쇄 / 저장</button>
+        </div>
+        <div class="card" id="printPreview"></div>
+      </div>
+
+    </main>
+  </div><!-- body-layout -->
+</div><!-- app -->
+
 <div id="notif"></div>
-
-<!-- Print-only view -->
 <div id="printview"></div>
 
-<!-- SheetJS for Excel export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-/* ── CONSTANTS ─────────────────────────────────────────────────────────── */
-const W = {groom:'이준환', bride:'최희수', date:'2026년 5월 31일'};
-const PW = '0914';
-const P_TAGS = ['가족','친척','친구','교회','직장','학교','이웃'];
-const P_AMTS = [3,5,7,10,15,20,30,50];
-const BRACKETS = [
-  {l:'3만원 이하',  min:0,      max:39999},
-  {l:'5만원',       min:40000,  max:69999},
-  {l:'7만원',       min:70000,  max:99999},
-  {l:'10만원',      min:100000, max:119999},
-  {l:'15만원',      min:120000, max:199999},
-  {l:'20만원',      min:200000, max:249999},
-  {l:'30만원 이상', min:250000, max:Infinity},
+const W={groom:'이준환',bride:'최희수',date:'2026년 5월 31일'};
+const PW='0914';
+const P_TAGS=['가족','친척','친구','교회','직장','학교','이웃'];
+const P_AMTS=[3,5,7,10,15,20,30,50];
+const BRACKETS=[
+  {l:'3만원 이하',min:0,max:39999},{l:'5만원',min:40000,max:69999},
+  {l:'7만원',min:70000,max:99999},{l:'10만원',min:100000,max:119999},
+  {l:'15만원',min:120000,max:199999},{l:'20만원',min:200000,max:249999},
+  {l:'30만원 이상',min:250000,max:Infinity}
 ];
-const SCRIPT = `// 구글 시트 > 확장 프로그램 > Apps Script > 코드 붙여넣기
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbwENF0KMEGEv2pADhSUa7eRYRIZLhrOhxY-GtvyylogI9Ce2M-xlG3UGD8QvmYWIjI/exec';
+const SCRIPT=`// 구글 시트 > 확장 프로그램 > Apps Script > 코드 붙여넣기
 // 배포 > 새 배포 > 웹 앱 > "모든 사용자"로 실행 > 배포 후 URL 복사
 
 function doPost(e) {
@@ -423,203 +619,235 @@ function doPost(e) {
   }
 }`;
 
-/* ── STATE ─────────────────────────────────────────────────────────────── */
-let entries = [], settings = {ghToken:'',gistId:'',sheetsUrl:'https://script.google.com/macros/s/AKfycbwENF0KMEGEv2pADhSUa7eRYRIZLhrOhxY-GtvyylogI9Ce2M-xlG3UGD8QvmYWIjI/exec',customTags:''};
-let editId = null, filterTag = '';
+let entries=[],settings={ghToken:'',gistId:'',sheetsUrl:SHEETS_URL,customTags:''};
+let editId=null,filterTag='';
 
-/* ── UTILS ─────────────────────────────────────────────────────────────── */
-const $ = id => document.getElementById(id);
-const toWon = n => n.toLocaleString('ko-KR') + '원';
-const toMan = n => (n/10000).toLocaleString('ko-KR') + '만원';
-const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
-const allTags = () => {
-  const ct = settings.customTags ? settings.customTags.split(',').map(t=>t.trim()).filter(Boolean) : [];
-  return [...new Set([...P_TAGS, ...entries.flatMap(e=>e.tags), ...ct])];
+const $=id=>document.getElementById(id);
+const toWon=n=>n.toLocaleString('ko-KR')+'원';
+const toMan=n=>(n/10000).toLocaleString('ko-KR')+'만원';
+const genId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const isDesktop=()=>window.innerWidth>=760;
+const allTags=()=>{
+  const ct=settings.customTags?settings.customTags.split(',').map(t=>t.trim()).filter(Boolean):[];
+  return[...new Set([...P_TAGS,...entries.flatMap(e=>e.tags),...ct])];
 };
-const orgs = () => [...new Set(entries.map(e=>e.org).filter(Boolean))];
+const orgs=()=>[...new Set(entries.map(e=>e.org).filter(Boolean))];
 
-/* ── PERSIST ────────────────────────────────────────────────────────────── */
-function persist() { localStorage.setItem('wgData', JSON.stringify(entries)); }
-function loadData() {
-  try { entries = JSON.parse(localStorage.getItem('wgData') || '[]'); } catch{}
-  try { settings = {...settings, ...JSON.parse(localStorage.getItem('wgSettings') || '{}')}; } catch{}
+function persist(){localStorage.setItem('wgData',JSON.stringify(entries));}
+const DEMO_DATA=[{"id":"demo0144","name":"염은지","org":"헬스장 친구","amount":150000,"note":"바로 옆집","tags":["교회"],"createdAt":"2026-05-31T14:05:34.000Z"},{"id":"demo0126","name":"서다은","org":"숙명여대","amount":30000,"note":"군대 동기","tags":["가족","직장"],"createdAt":"2026-05-31T14:05:41.000Z"},{"id":"demo0088","name":"차현서","org":"동국대학교","amount":50000,"note":"형 친구","tags":["친구","교회"],"createdAt":"2026-05-31T14:05:42.000Z"},{"id":"demo0049","name":"심주희","org":"CJ제일제당","amount":300000,"note":"소개팅으로 만난 친구","tags":["친구","교회"],"createdAt":"2026-05-31T14:05:47.000Z"},{"id":"demo0095","name":"금소희","org":"사내 동호회","amount":200000,"note":"결혼을 진심으로 축하드립니다","tags":["친척"],"createdAt":"2026-05-31T14:05:48.000Z"},{"id":"demo0071","name":"윤건우","org":"여행 동호회","amount":100000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T14:05:56.000Z"},{"id":"demo0128","name":"금동현","org":"고려대학교","amount":200000,"note":"","tags":["가족","직장"],"createdAt":"2026-05-31T14:10:04.000Z"},{"id":"demo0176","name":"주수연","org":"대학원 동기","amount":200000,"note":"","tags":["직장"],"createdAt":"2026-05-31T14:10:25.000Z"},{"id":"demo0084","name":"천채원","org":"건국대학교","amount":200000,"note":"바로 옆집","tags":["교회"],"createdAt":"2026-05-31T14:15:21.000Z"},{"id":"demo0161","name":"엄예은","org":"당근마켓","amount":50000,"note":"두 분이 행복하게 살기를","tags":["친척"],"createdAt":"2026-05-31T14:15:24.000Z"},{"id":"demo0085","name":"이은지","org":"경희대학교","amount":500000,"note":"대학원 선배","tags":["직장"],"createdAt":"2026-05-31T14:15:29.000Z"},{"id":"demo0193","name":"라민서","org":"CJ제일제당","amount":100000,"note":"백년해로 하세요","tags":["교회"],"createdAt":"2026-05-31T14:15:49.000Z"},{"id":"demo0037","name":"라이준","org":"SK텔레콤","amount":50000,"note":"이자영 통해서 연락","tags":["이웃"],"createdAt":"2026-05-31T14:20:19.000Z"},{"id":"demo0023","name":"현서윤","org":"새문안교회","amount":100000,"note":"늘 행복하세요","tags":["가족","친척"],"createdAt":"2026-05-31T14:20:21.000Z"},{"id":"demo0122","name":"표주희","org":"당근마켓","amount":100000,"note":"","tags":["직장","친구"],"createdAt":"2026-05-31T14:20:29.000Z"},{"id":"demo0111","name":"문수아","org":"새문안교회","amount":200000,"note":"두 분이 행복하게 살기를","tags":["직장"],"createdAt":"2026-05-31T14:20:31.000Z"},{"id":"demo0158","name":"공윤서","org":"이준환 친척","amount":50000,"note":"","tags":["직장"],"createdAt":"2026-05-31T14:20:39.000Z"},{"id":"demo0148","name":"권하준","org":"KT","amount":150000,"note":"친구 친구","tags":["친척"],"createdAt":"2026-05-31T14:20:42.000Z"},{"id":"demo0028","name":"조수연","org":"고등학교 동창","amount":200000,"note":"같은 팀","tags":["가족","친척"],"createdAt":"2026-05-31T14:25:15.000Z"},{"id":"demo0005","name":"강채은","org":"숙명여대","amount":150000,"note":"친구 친구","tags":["가족","친척"],"createdAt":"2026-05-31T14:25:18.000Z"},{"id":"demo0070","name":"남동현","org":"군대 동기","amount":50000,"note":"결혼을 진심으로 축하드립니다","tags":["가족","직장"],"createdAt":"2026-05-31T14:25:26.000Z"},{"id":"demo0119","name":"전하은","org":"회사 동료","amount":70000,"note":"두 분이 행복하게 살기를","tags":["직장","친구"],"createdAt":"2026-05-31T14:25:29.000Z"},{"id":"demo0031","name":"오지영","org":"사내 동호회","amount":500000,"note":"소개팅으로 만난 친구","tags":["친구"],"createdAt":"2026-05-31T14:25:30.000Z"},{"id":"demo0175","name":"소하은","org":"최희수 친척","amount":100000,"note":"두 분이 행복하게 살기를","tags":["교회","가족"],"createdAt":"2026-05-31T14:30:07.000Z"},{"id":"demo0124","name":"추예준","org":"고려대학교","amount":200000,"note":"친구 친구","tags":["직장"],"createdAt":"2026-05-31T14:30:09.000Z"},{"id":"demo0102","name":"선정우","org":"이준환 친척","amount":100000,"note":"","tags":["친구","학교"],"createdAt":"2026-05-31T14:30:39.000Z"},{"id":"demo0155","name":"차은지","org":"당근마켓","amount":50000,"note":"두 분이 행복하게 살기를","tags":["직장","친구"],"createdAt":"2026-05-31T14:30:55.000Z"},{"id":"demo0041","name":"왕민준","org":"대학교 동기","amount":500000,"note":"백년해로 하세요","tags":["직장","친구"],"createdAt":"2026-05-31T14:30:56.000Z"},{"id":"demo0140","name":"선예준","org":"이준환 친척","amount":100000,"note":"군대 동기","tags":["가족","직장"],"createdAt":"2026-05-31T14:35:18.000Z"},{"id":"demo0146","name":"남수아","org":"LG전자","amount":200000,"note":"","tags":["친척","교회"],"createdAt":"2026-05-31T14:35:29.000Z"},{"id":"demo0132","name":"한민서","org":"한양대학교","amount":200000,"note":"늘 행복하세요","tags":["이웃"],"createdAt":"2026-05-31T14:35:37.000Z"},{"id":"demo0162","name":"왕서진","org":"숙명여대","amount":150000,"note":"동생 친구","tags":["학교"],"createdAt":"2026-05-31T14:35:44.000Z"},{"id":"demo0030","name":"노주희","org":"카카오","amount":100000,"note":"","tags":["친구","교회"],"createdAt":"2026-05-31T14:40:00.000Z"},{"id":"demo0009","name":"노현우","org":"숙명여대","amount":100000,"note":"","tags":["친구","학교"],"createdAt":"2026-05-31T14:40:03.000Z"},{"id":"demo0013","name":"송윤서","org":"서울제일교회","amount":50000,"note":"같은 팀","tags":["친구","교회"],"createdAt":"2026-05-31T14:40:10.000Z"},{"id":"demo0143","name":"우수민","org":"연세대학교","amount":300000,"note":"형 친구","tags":["가족","친척"],"createdAt":"2026-05-31T14:40:14.000Z"},{"id":"demo0150","name":"표민서","org":"경희대학교","amount":70000,"note":"박지훈 소개","tags":["가족"],"createdAt":"2026-05-31T14:40:23.000Z"},{"id":"demo0115","name":"옥지윤","org":"경희대학교","amount":30000,"note":"","tags":["친구"],"createdAt":"2026-05-31T14:40:48.000Z"},{"id":"demo0002","name":"최소윤","org":"신세계","amount":200000,"note":"","tags":["이웃"],"createdAt":"2026-05-31T14:40:55.000Z"},{"id":"demo0007","name":"남주희","org":"쿠팡","amount":100000,"note":"형 친구","tags":["친구","학교"],"createdAt":"2026-05-31T14:45:13.000Z"},{"id":"demo0055","name":"반지후","org":"한양대학교","amount":200000,"note":"두 분이 행복하게 살기를","tags":["친구"],"createdAt":"2026-05-31T14:45:27.000Z"},{"id":"demo0021","name":"금혜원","org":"토스","amount":50000,"note":"","tags":["이웃"],"createdAt":"2026-05-31T14:45:33.000Z"},{"id":"demo0036","name":"노아린","org":"최희수 친척","amount":30000,"note":"바로 옆집","tags":["학교"],"createdAt":"2026-05-31T14:45:37.000Z"},{"id":"demo0082","name":"나지수","org":"대학원 동기","amount":100000,"note":"결혼을 진심으로 축하드립니다","tags":["교회","가족"],"createdAt":"2026-05-31T14:50:06.000Z"},{"id":"demo0131","name":"석준우","org":"KT","amount":150000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T14:50:11.000Z"},{"id":"demo0051","name":"정은지","org":"대전중앙교회","amount":50000,"note":"형 친구","tags":["친구"],"createdAt":"2026-05-31T14:50:52.000Z"},{"id":"demo0188","name":"구유진","org":"우리은행","amount":200000,"note":"박지훈 소개","tags":["가족"],"createdAt":"2026-05-31T14:55:03.000Z"},{"id":"demo0047","name":"안예준","org":"신한은행","amount":100000,"note":"같은 팀","tags":["친척","교회"],"createdAt":"2026-05-31T14:55:15.000Z"},{"id":"demo0127","name":"전시우","org":"대전중앙교회","amount":300000,"note":"이자영 통해서 연락","tags":["친구","학교"],"createdAt":"2026-05-31T14:55:21.000Z"},{"id":"demo0198","name":"왕주원","org":"고등학교 동창","amount":200000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T14:55:23.000Z"},{"id":"demo0182","name":"공주원","org":"건국대학교","amount":500000,"note":"늘 행복하세요","tags":["가족","친척"],"createdAt":"2026-05-31T14:55:25.000Z"},{"id":"demo0025","name":"정주희","org":"연세대학교","amount":50000,"note":"늘 행복하세요","tags":["직장","친구"],"createdAt":"2026-05-31T14:55:31.000Z"},{"id":"demo0184","name":"권다은","org":"강남성결교회","amount":50000,"note":"박지훈 소개","tags":["친척","교회"],"createdAt":"2026-05-31T14:55:52.000Z"},{"id":"demo0123","name":"엄주희","org":"신세계","amount":200000,"note":"","tags":["친구"],"createdAt":"2026-05-31T14:55:54.000Z"},{"id":"demo0160","name":"여서연","org":"대학원 동기","amount":50000,"note":"형 친구","tags":["직장"],"createdAt":"2026-05-31T15:00:05.000Z"},{"id":"demo0039","name":"서시우","org":"부산제일교회","amount":50000,"note":"두 분이 행복하게 살기를","tags":["직장","친구"],"createdAt":"2026-05-31T15:00:15.000Z"},{"id":"demo0180","name":"마나은","org":"카카오","amount":500000,"note":"","tags":["교회"],"createdAt":"2026-05-31T15:00:25.000Z"},{"id":"demo0172","name":"장준우","org":"부서 선배","amount":200000,"note":"바로 옆집","tags":["가족"],"createdAt":"2026-05-31T15:00:26.000Z"},{"id":"demo0163","name":"권은지","org":"고등학교 동창","amount":200000,"note":"","tags":["친척","교회"],"createdAt":"2026-05-31T15:00:28.000Z"},{"id":"demo0098","name":"안나윤","org":"사내 동호회","amount":100000,"note":"오래된 친구","tags":["가족","친척"],"createdAt":"2026-05-31T15:00:30.000Z"},{"id":"demo0064","name":"노준우","org":"고등학교 동창","amount":200000,"note":"대학원 선배","tags":["가족"],"createdAt":"2026-05-31T15:00:51.000Z"},{"id":"demo0170","name":"최예은","org":"대학교 동기","amount":500000,"note":"두 분이 행복하게 살기를","tags":["가족","직장"],"createdAt":"2026-05-31T15:00:58.000Z"},{"id":"demo0024","name":"박아린","org":"이준환 가족","amount":50000,"note":"늘 행복하세요","tags":["학교"],"createdAt":"2026-05-31T15:05:04.000Z"},{"id":"demo0045","name":"안나윤","org":"SK텔레콤","amount":50000,"note":"형 친구","tags":["가족","직장"],"createdAt":"2026-05-31T15:05:04.000Z"},{"id":"demo0035","name":"반주원","org":"롯데칠성","amount":50000,"note":"바로 옆집","tags":["학교"],"createdAt":"2026-05-31T15:05:07.000Z"},{"id":"demo0159","name":"강채은","org":"동네 친구","amount":500000,"note":"","tags":["이웃"],"createdAt":"2026-05-31T15:05:30.000Z"},{"id":"demo0196","name":"류나은","org":"서울대학교","amount":70000,"note":"친구 친구","tags":["이웃"],"createdAt":"2026-05-31T15:05:35.000Z"},{"id":"demo0178","name":"김하은","org":"부서 선배","amount":100000,"note":"군대 동기","tags":["친척"],"createdAt":"2026-05-31T15:05:45.000Z"},{"id":"demo0153","name":"원민재","org":"토스","amount":300000,"note":"결혼을 진심으로 축하드립니다","tags":["학교"],"createdAt":"2026-05-31T15:05:48.000Z"},{"id":"demo0152","name":"손지후","org":"독서 모임","amount":100000,"note":"결혼을 진심으로 축하드립니다","tags":["가족","친척"],"createdAt":"2026-05-31T15:05:50.000Z"},{"id":"demo0065","name":"라지윤","org":"SK하이닉스","amount":150000,"note":"대학원 선배","tags":["친구"],"createdAt":"2026-05-31T15:05:51.000Z"},{"id":"demo0043","name":"백다인","org":"연세대학교","amount":50000,"note":"두 분이 행복하게 살기를","tags":["이웃"],"createdAt":"2026-05-31T15:10:03.000Z"},{"id":"demo0138","name":"주혜원","org":"헬스장 친구","amount":50000,"note":"박지훈 소개","tags":["학교"],"createdAt":"2026-05-31T15:10:12.000Z"},{"id":"demo0026","name":"허채원","org":"토스","amount":200000,"note":"","tags":["친척","교회"],"createdAt":"2026-05-31T15:10:26.000Z"},{"id":"demo0076","name":"최주원","org":"고등학교 동창","amount":100000,"note":"형 친구","tags":["친척"],"createdAt":"2026-05-31T15:10:29.000Z"},{"id":"demo0080","name":"안수아","org":"대학교 동기","amount":50000,"note":"결혼을 진심으로 축하드립니다","tags":["학교"],"createdAt":"2026-05-31T15:10:38.000Z"},{"id":"demo0157","name":"문현준","org":"SK하이닉스","amount":50000,"note":"동생 친구","tags":["가족","직장"],"createdAt":"2026-05-31T15:10:49.000Z"},{"id":"demo0121","name":"도재원","org":"동네 친구","amount":150000,"note":"오래된 친구","tags":["친구","학교"],"createdAt":"2026-05-31T15:15:19.000Z"},{"id":"demo0096","name":"왕예은","org":"국민은행","amount":50000,"note":"결혼을 진심으로 축하드립니다","tags":["직장","학교"],"createdAt":"2026-05-31T15:15:23.000Z"},{"id":"demo0135","name":"소예린","org":"SK텔레콤","amount":100000,"note":"백년해로 하세요","tags":["직장","학교"],"createdAt":"2026-05-31T15:15:24.000Z"},{"id":"demo0046","name":"전채원","org":"현대자동차","amount":500000,"note":"","tags":["교회"],"createdAt":"2026-05-31T15:15:27.000Z"},{"id":"demo0183","name":"왕주원","org":"중앙대학교","amount":500000,"note":"이자영 통해서 연락","tags":["친구","학교"],"createdAt":"2026-05-31T15:15:40.000Z"},{"id":"demo0174","name":"조준우","org":"CJ제일제당","amount":300000,"note":"같은 팀","tags":["학교"],"createdAt":"2026-05-31T15:15:42.000Z"},{"id":"demo0032","name":"허주희","org":"중앙대학교","amount":30000,"note":"친구 친구","tags":["친척"],"createdAt":"2026-05-31T15:15:44.000Z"},{"id":"demo0068","name":"노미래","org":"중학교 동창","amount":70000,"note":"","tags":["친구","교회"],"createdAt":"2026-05-31T15:15:45.000Z"},{"id":"demo0091","name":"손주원","org":"KT","amount":200000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T15:15:45.000Z"},{"id":"demo0105","name":"남서진","org":"회사 동료","amount":70000,"note":"형 친구","tags":["가족","직장"],"createdAt":"2026-05-31T15:15:50.000Z"},{"id":"demo0120","name":"류동현","org":"신세계","amount":200000,"note":"군대 동기","tags":["직장","친구"],"createdAt":"2026-05-31T15:15:50.000Z"},{"id":"demo0050","name":"원유진","org":"경희대학교","amount":300000,"note":"늘 행복하세요","tags":["이웃"],"createdAt":"2026-05-31T15:15:55.000Z"},{"id":"demo0101","name":"노지후","org":"이준환 가족","amount":300000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T15:15:58.000Z"},{"id":"demo0018","name":"기예은","org":"신세계","amount":50000,"note":"소개팅으로 만난 친구","tags":["교회"],"createdAt":"2026-05-31T15:20:00.000Z"},{"id":"demo0179","name":"남윤서","org":"이준환 가족","amount":500000,"note":"박지훈 소개","tags":["이웃"],"createdAt":"2026-05-31T15:20:01.000Z"},{"id":"demo0129","name":"심나윤","org":"대학원 동기","amount":70000,"note":"바로 옆집","tags":["친구"],"createdAt":"2026-05-31T15:20:06.000Z"},{"id":"demo0177","name":"윤민준","org":"한화그룹","amount":70000,"note":"군대 동기","tags":["친구"],"createdAt":"2026-05-31T15:20:07.000Z"},{"id":"demo0003","name":"김지민","org":"헬스장 친구","amount":50000,"note":"동생 친구","tags":["가족","직장"],"createdAt":"2026-05-31T15:20:09.000Z"},{"id":"demo0151","name":"서수연","org":"성균관대학교","amount":150000,"note":"박지훈 소개","tags":["친척","교회"],"createdAt":"2026-05-31T15:20:17.000Z"},{"id":"demo0130","name":"서서윤","org":"CJ제일제당","amount":200000,"note":"오래된 친구","tags":["친구","학교"],"createdAt":"2026-05-31T15:20:23.000Z"},{"id":"demo0147","name":"구가은","org":"경희대학교","amount":50000,"note":"같은 팀","tags":["친척"],"createdAt":"2026-05-31T15:20:31.000Z"},{"id":"demo0168","name":"나지원","org":"쿠팡","amount":200000,"note":"결혼을 진심으로 축하드립니다","tags":["직장","친구"],"createdAt":"2026-05-31T15:20:35.000Z"},{"id":"demo0017","name":"기지민","org":"롯데칠성","amount":150000,"note":"대학원 선배","tags":["친척","교회"],"createdAt":"2026-05-31T15:20:40.000Z"},{"id":"demo0117","name":"표지후","org":"LG전자","amount":200000,"note":"늘 행복하세요","tags":["학교"],"createdAt":"2026-05-31T15:25:00.000Z"},{"id":"demo0104","name":"임현우","org":"삼성전자","amount":100000,"note":"","tags":["직장"],"createdAt":"2026-05-31T15:25:02.000Z"},{"id":"demo0042","name":"송현준","org":"배달의민족","amount":50000,"note":"","tags":["가족","직장"],"createdAt":"2026-05-31T15:25:18.000Z"},{"id":"demo0054","name":"곽예준","org":"쿠팡","amount":200000,"note":"박지훈 소개","tags":["교회","가족"],"createdAt":"2026-05-31T15:25:38.000Z"},{"id":"demo0094","name":"마선우","org":"신한은행","amount":70000,"note":"대학원 선배","tags":["친구"],"createdAt":"2026-05-31T15:25:47.000Z"},{"id":"demo0190","name":"변지윤","org":"이준환 친척","amount":150000,"note":"같은 팀","tags":["친구","교회"],"createdAt":"2026-05-31T15:30:20.000Z"},{"id":"demo0089","name":"함재원","org":"LG전자","amount":100000,"note":"이자영 통해서 연락","tags":["직장","학교"],"createdAt":"2026-05-31T15:30:21.000Z"},{"id":"demo0118","name":"추주원","org":"포스코","amount":500000,"note":"대학원 선배","tags":["친척","교회"],"createdAt":"2026-05-31T15:35:07.000Z"},{"id":"demo0199","name":"나도현","org":"한화그룹","amount":100000,"note":"","tags":["친구","교회"],"createdAt":"2026-05-31T15:35:18.000Z"},{"id":"demo0103","name":"서소희","org":"사내 동호회","amount":50000,"note":"결혼을 진심으로 축하드립니다","tags":["이웃"],"createdAt":"2026-05-31T15:35:35.000Z"},{"id":"demo0053","name":"천가은","org":"강남성결교회","amount":100000,"note":"","tags":["이웃"],"createdAt":"2026-05-31T15:35:37.000Z"},{"id":"demo0057","name":"지하린","org":"배달의민족","amount":200000,"note":"백년해로 하세요","tags":["친척","교회"],"createdAt":"2026-05-31T15:35:42.000Z"},{"id":"demo0165","name":"하승현","org":"당근마켓","amount":200000,"note":"","tags":["친척","교회"],"createdAt":"2026-05-31T15:35:53.000Z"},{"id":"demo0116","name":"명나윤","org":"동국대학교","amount":300000,"note":"결혼을 진심으로 축하드립니다","tags":["가족"],"createdAt":"2026-05-31T15:35:56.000Z"},{"id":"demo0008","name":"성예린","org":"대학원 동기","amount":200000,"note":"","tags":["가족","친척"],"createdAt":"2026-05-31T15:40:34.000Z"},{"id":"demo0075","name":"안민서","org":"부산제일교회","amount":30000,"note":"친구 친구","tags":["친척","교회"],"createdAt":"2026-05-31T15:40:42.000Z"},{"id":"demo0060","name":"엄지윤","org":"동국대학교","amount":100000,"note":"결혼을 진심으로 축하드립니다","tags":["이웃"],"createdAt":"2026-05-31T15:40:47.000Z"},{"id":"demo0077","name":"엄재원","org":"사내 동호회","amount":100000,"note":"동생 친구","tags":["친구","학교"],"createdAt":"2026-05-31T15:45:05.000Z"},{"id":"demo0108","name":"구예린","org":"중앙대학교","amount":70000,"note":"","tags":["직장","친구"],"createdAt":"2026-05-31T15:45:05.000Z"},{"id":"demo0063","name":"임지윤","org":"경희대학교","amount":200000,"note":"결혼을 진심으로 축하드립니다","tags":["학교"],"createdAt":"2026-05-31T15:45:25.000Z"},{"id":"demo0195","name":"하채은","org":"대학교 동기","amount":200000,"note":"군대 동기","tags":["직장","학교"],"createdAt":"2026-05-31T15:45:37.000Z"},{"id":"demo0164","name":"남지아","org":"연세대학교","amount":500000,"note":"친구 친구","tags":["직장"],"createdAt":"2026-05-31T15:45:42.000Z"},{"id":"demo0004","name":"허지민","org":"연세대학교","amount":50000,"note":"친구 친구","tags":["가족","친척"],"createdAt":"2026-05-31T15:45:51.000Z"},{"id":"demo0136","name":"위하준","org":"KT","amount":100000,"note":"박지훈 소개","tags":["학교"],"createdAt":"2026-05-31T15:45:53.000Z"},{"id":"demo0185","name":"류민재","org":"쿠팡","amount":50000,"note":"결혼을 진심으로 축하드립니다","tags":["친구","학교"],"createdAt":"2026-05-31T15:50:04.000Z"},{"id":"demo0100","name":"장수빈","org":"서울제일교회","amount":50000,"note":"같은 팀","tags":["학교"],"createdAt":"2026-05-31T15:50:05.000Z"},{"id":"demo0001","name":"오아린","org":"건국대학교","amount":30000,"note":"바로 옆집","tags":["가족"],"createdAt":"2026-05-31T15:50:32.000Z"},{"id":"demo0038","name":"마이준","org":"사내 동호회","amount":50000,"note":"형 친구","tags":["가족"],"createdAt":"2026-05-31T15:50:36.000Z"},{"id":"demo0022","name":"소건우","org":"부산제일교회","amount":300000,"note":"결혼을 진심으로 축하드립니다","tags":["가족","직장"],"createdAt":"2026-05-31T15:50:42.000Z"},{"id":"demo0081","name":"권혜원","org":"독서 모임","amount":50000,"note":"대학원 선배","tags":["친구","학교"],"createdAt":"2026-05-31T15:50:59.000Z"},{"id":"demo0034","name":"윤수민","org":"고려대학교","amount":30000,"note":"","tags":["가족"],"createdAt":"2026-05-31T15:55:03.000Z"},{"id":"demo0087","name":"금혜원","org":"대전중앙교회","amount":100000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T15:55:05.000Z"},{"id":"demo0145","name":"황지윤","org":"성균관대학교","amount":200000,"note":"두 분이 행복하게 살기를","tags":["가족","직장"],"createdAt":"2026-05-31T15:55:06.000Z"},{"id":"demo0069","name":"주민재","org":"우리은행","amount":100000,"note":"","tags":["교회"],"createdAt":"2026-05-31T15:55:09.000Z"},{"id":"demo0079","name":"최소희","org":"KT","amount":50000,"note":"오래된 친구","tags":["직장","학교"],"createdAt":"2026-05-31T15:55:15.000Z"},{"id":"demo0027","name":"손하준","org":"쿠팡","amount":200000,"note":"박지훈 소개","tags":["교회","가족"],"createdAt":"2026-05-31T15:55:29.000Z"},{"id":"demo0189","name":"현미래","org":"국민은행","amount":50000,"note":"바로 옆집","tags":["이웃"],"createdAt":"2026-05-31T15:55:32.000Z"},{"id":"demo0011","name":"지건우","org":"고등학교 동창","amount":100000,"note":"형 친구","tags":["교회","가족"],"createdAt":"2026-05-31T15:55:34.000Z"},{"id":"demo0181","name":"도서진","org":"배달의민족","amount":100000,"note":"이자영 통해서 연락","tags":["가족"],"createdAt":"2026-05-31T15:55:44.000Z"},{"id":"demo0194","name":"채수연","org":"최희수 친척","amount":30000,"note":"이자영 통해서 연락","tags":["친구","교회"],"createdAt":"2026-05-31T16:00:18.000Z"},{"id":"demo0139","name":"하수연","org":"사내 동호회","amount":200000,"note":"군대 동기","tags":["친구","교회"],"createdAt":"2026-05-31T16:00:19.000Z"},{"id":"demo0059","name":"구수빈","org":"이준환 가족","amount":500000,"note":"백년해로 하세요","tags":["가족"],"createdAt":"2026-05-31T16:00:27.000Z"},{"id":"demo0107","name":"윤현우","org":"동네 친구","amount":70000,"note":"","tags":["학교"],"createdAt":"2026-05-31T16:00:29.000Z"},{"id":"demo0092","name":"표서윤","org":"동네 친구","amount":30000,"note":"백년해로 하세요","tags":["가족","친척"],"createdAt":"2026-05-31T16:00:44.000Z"},{"id":"demo0154","name":"백아린","org":"한화그룹","amount":500000,"note":"늘 행복하세요","tags":["직장","학교"],"createdAt":"2026-05-31T16:05:00.000Z"},{"id":"demo0012","name":"곽수민","org":"이준환 친척","amount":100000,"note":"","tags":["친척","교회"],"createdAt":"2026-05-31T16:05:14.000Z"},{"id":"demo0056","name":"김다은","org":"헬스장 친구","amount":150000,"note":"결혼을 진심으로 축하드립니다","tags":["이웃"],"createdAt":"2026-05-31T16:05:21.000Z"},{"id":"demo0000","name":"권서준","org":"부서 선배","amount":70000,"note":"늘 행복하세요","tags":["친구"],"createdAt":"2026-05-31T16:05:34.000Z"},{"id":"demo0097","name":"문정우","org":"삼성전자","amount":200000,"note":"군대 동기","tags":["직장","친구"],"createdAt":"2026-05-31T16:05:44.000Z"},{"id":"demo0062","name":"나우진","org":"헬스장 친구","amount":50000,"note":"오래된 친구","tags":["친척"],"createdAt":"2026-05-31T16:05:49.000Z"},{"id":"demo0067","name":"기서연","org":"여행 동호회","amount":150000,"note":"소개팅으로 만난 친구","tags":["직장"],"createdAt":"2026-05-31T16:10:16.000Z"},{"id":"demo0073","name":"금수민","org":"부서 선배","amount":150000,"note":"","tags":["친구","교회"],"createdAt":"2026-05-31T16:10:17.000Z"},{"id":"demo0187","name":"엄주희","org":"중학교 동창","amount":100000,"note":"형 친구","tags":["친척"],"createdAt":"2026-05-31T16:10:28.000Z"},{"id":"demo0033","name":"표준우","org":"신세계","amount":70000,"note":"같은 팀","tags":["친구"],"createdAt":"2026-05-31T16:10:34.000Z"},{"id":"demo0110","name":"박지민","org":"대학원 동기","amount":500000,"note":"","tags":["친구","학교"],"createdAt":"2026-05-31T16:10:48.000Z"},{"id":"demo0099","name":"위서윤","org":"연세대학교","amount":50000,"note":"두 분이 행복하게 살기를","tags":["가족"],"createdAt":"2026-05-31T16:10:52.000Z"},{"id":"demo0010","name":"남선영","org":"현대자동차","amount":300000,"note":"친구 친구","tags":["교회"],"createdAt":"2026-05-31T16:15:13.000Z"},{"id":"demo0086","name":"전서연","org":"롯데칠성","amount":200000,"note":"두 분이 행복하게 살기를","tags":["직장","친구"],"createdAt":"2026-05-31T16:15:58.000Z"},{"id":"demo0156","name":"최준서","org":"삼성전자","amount":100000,"note":"늘 행복하세요","tags":["친구","교회"],"createdAt":"2026-05-31T16:20:01.000Z"},{"id":"demo0052","name":"남우진","org":"LG전자","amount":200000,"note":"친구 친구","tags":["친구"],"createdAt":"2026-05-31T16:20:17.000Z"},{"id":"demo0171","name":"채지원","org":"삼성전자","amount":50000,"note":"군대 동기","tags":["직장","학교"],"createdAt":"2026-05-31T16:20:25.000Z"},{"id":"demo0029","name":"손지훈","org":"부산제일교회","amount":100000,"note":"동생 친구","tags":["친척"],"createdAt":"2026-05-31T16:20:29.000Z"},{"id":"demo0090","name":"차현서","org":"최희수 친척","amount":200000,"note":"두 분이 행복하게 살기를","tags":["친척","교회"],"createdAt":"2026-05-31T16:25:33.000Z"},{"id":"demo0014","name":"소예은","org":"카카오","amount":100000,"note":"","tags":["교회","가족"],"createdAt":"2026-05-31T16:25:35.000Z"},{"id":"demo0133","name":"류우진","org":"숙명여대","amount":200000,"note":"형 친구","tags":["친구","학교"],"createdAt":"2026-05-31T16:25:57.000Z"},{"id":"demo0113","name":"추예린","org":"서울제일교회","amount":70000,"note":"친구 친구","tags":["이웃"],"createdAt":"2026-05-31T16:30:29.000Z"},{"id":"demo0166","name":"한주원","org":"건국대학교","amount":50000,"note":"박지훈 소개","tags":["가족","직장"],"createdAt":"2026-05-31T16:30:37.000Z"},{"id":"demo0083","name":"구은지","org":"대학원 동기","amount":200000,"note":"대학원 선배","tags":["친구","교회"],"createdAt":"2026-05-31T16:35:02.000Z"},{"id":"demo0173","name":"마재원","org":"CJ제일제당","amount":100000,"note":"이자영 통해서 연락","tags":["친구","학교"],"createdAt":"2026-05-31T16:35:05.000Z"},{"id":"demo0044","name":"오나윤","org":"건국대학교","amount":500000,"note":"같은 팀","tags":["친구","학교"],"createdAt":"2026-05-31T16:40:49.000Z"},{"id":"demo0109","name":"강현서","org":"건국대학교","amount":200000,"note":"","tags":["교회"],"createdAt":"2026-05-31T16:40:53.000Z"},{"id":"demo0078","name":"연서준","org":"부서 선배","amount":150000,"note":"박지훈 소개","tags":["가족"],"createdAt":"2026-05-31T16:45:02.000Z"},{"id":"demo0040","name":"현서진","org":"CJ제일제당","amount":100000,"note":"","tags":["직장","학교"],"createdAt":"2026-05-31T16:45:51.000Z"},{"id":"demo0149","name":"옥지아","org":"이준환 친척","amount":200000,"note":"군대 동기","tags":["가족","직장"],"createdAt":"2026-05-31T16:55:53.000Z"},{"id":"demo0093","name":"노정우","org":"대학교 동기","amount":200000,"note":"","tags":["교회"],"createdAt":"2026-05-31T17:10:22.000Z"},{"id":"demo0167","name":"원하린","org":"배달의민족","amount":100000,"note":"동생 친구","tags":["교회"],"createdAt":"2026-05-31T17:15:18.000Z"},{"id":"demo0137","name":"염선우","org":"삼성전자","amount":200000,"note":"같은 팀","tags":["직장","학교"],"createdAt":"2026-05-31T17:20:53.000Z"},{"id":"demo0048","name":"신지원","org":"이웃사촌","amount":150000,"note":"동생 친구","tags":["친척","교회"],"createdAt":"2026-05-31T17:20:59.000Z"},{"id":"demo0186","name":"문소희","org":"이웃사촌","amount":200000,"note":"형 친구","tags":["직장"],"createdAt":"2026-05-31T17:25:28.000Z"},{"id":"demo0061","name":"고하린","org":"네이버","amount":70000,"note":"","tags":["직장","친구"],"createdAt":"2026-05-31T17:25:43.000Z"},{"id":"demo0006","name":"공지수","org":"신세계","amount":200000,"note":"같은 팀","tags":["가족","친척"],"createdAt":"2026-05-31T17:30:05.000Z"},{"id":"demo0015","name":"이수연","org":"팀 동료","amount":50000,"note":"","tags":["이웃"],"createdAt":"2026-05-31T17:30:21.000Z"},{"id":"demo0020","name":"심도윤","org":"KT","amount":200000,"note":"바로 옆집","tags":["가족","친척"],"createdAt":"2026-05-31T17:40:48.000Z"},{"id":"demo0114","name":"오이준","org":"SK텔레콤","amount":100000,"note":"친구 친구","tags":["가족","친척"],"createdAt":"2026-05-31T17:45:00.000Z"},{"id":"demo0106","name":"배서연","org":"배달의민족","amount":150000,"note":"군대 동기","tags":["친구"],"createdAt":"2026-05-31T17:45:04.000Z"},{"id":"demo0019","name":"엄하은","org":"LG전자","amount":50000,"note":"박지훈 소개","tags":["친척","교회"],"createdAt":"2026-05-31T17:45:19.000Z"},{"id":"demo0191","name":"연윤서","org":"당근마켓","amount":30000,"note":"대학원 선배","tags":["직장"],"createdAt":"2026-05-31T17:45:45.000Z"},{"id":"demo0197","name":"함가은","org":"동네 친구","amount":100000,"note":"군대 동기","tags":["직장","학교"],"createdAt":"2026-05-31T17:45:47.000Z"},{"id":"demo0074","name":"석하은","org":"LG전자","amount":100000,"note":"친구 친구","tags":["교회"],"createdAt":"2026-05-31T17:45:58.000Z"},{"id":"demo0112","name":"오수아","org":"서울대학교","amount":100000,"note":"이자영 통해서 연락","tags":["교회"],"createdAt":"2026-05-31T17:50:21.000Z"},{"id":"demo0169","name":"현지후","org":"사내 동호회","amount":70000,"note":"늘 행복하세요","tags":["학교"],"createdAt":"2026-05-31T17:50:49.000Z"},{"id":"demo0016","name":"권서진","org":"건국대학교","amount":50000,"note":"오래된 친구","tags":["직장"],"createdAt":"2026-05-31T17:55:16.000Z"},{"id":"demo0141","name":"엄수민","org":"경희대학교","amount":50000,"note":"군대 동기","tags":["친구"],"createdAt":"2026-05-31T17:55:23.000Z"},{"id":"demo0125","name":"명예준","org":"토스","amount":150000,"note":"이자영 통해서 연락","tags":["학교"],"createdAt":"2026-05-31T17:55:28.000Z"},{"id":"demo0066","name":"길하린","org":"새문안교회","amount":150000,"note":"이자영 통해서 연락","tags":["학교"],"createdAt":"2026-05-31T18:00:39.000Z"},{"id":"demo0058","name":"추이준","org":"중앙대학교","amount":200000,"note":"","tags":["친구","학교"],"createdAt":"2026-05-31T18:05:39.000Z"},{"id":"demo0072","name":"함수아","org":"삼성전자","amount":100000,"note":"친구 친구","tags":["친구","학교"],"createdAt":"2026-05-31T18:15:26.000Z"},{"id":"demo0142","name":"왕윤서","org":"우리은행","amount":500000,"note":"두 분이 행복하게 살기를","tags":["친척"],"createdAt":"2026-05-31T18:15:51.000Z"},{"id":"demo0134","name":"주수연","org":"부산제일교회","amount":50000,"note":"형 친구","tags":["가족","친척"],"createdAt":"2026-05-31T18:25:19.000Z"},{"id":"demo0192","name":"한윤서","org":"고등학교 동창","amount":50000,"note":"늘 행복하세요","tags":["가족"],"createdAt":"2026-05-31T18:30:33.000Z"}];
+function loadData(){
+  try{const saved=localStorage.getItem('wgData');
+    entries=saved?JSON.parse(saved):DEMO_DATA;
+  }catch{entries=DEMO_DATA;}
+  try{const s=JSON.parse(localStorage.getItem('wgSettings')||'{}');
+    settings={...settings,...s};
+    if(!settings.sheetsUrl)settings.sheetsUrl=SHEETS_URL;
+  }catch{}
 }
 
-/* ── NOTIFY ─────────────────────────────────────────────────────────────── */
 let _nt;
-function notify(msg, isErr=false) {
-  const el = $('notif');
-  el.textContent = msg;
-  el.className = isErr ? 'notif-err' : '';
-  el.style.display = 'block';
-  clearTimeout(_nt);
-  _nt = setTimeout(() => el.style.display='none', 3000);
+function notify(msg,isErr=false){
+  const el=$('notif');el.textContent=msg;
+  el.className=isErr?'notif-err':'';el.style.display='block';
+  clearTimeout(_nt);_nt=setTimeout(()=>el.style.display='none',3000);
 }
-function showSync(msg) {
-  const b = $('syncBadge'); b.textContent = msg; b.style.display='inline-block';
-  setTimeout(()=>b.style.display='none', 4000);
+function showSync(msg){
+  const b=$('syncBadge');b.textContent=msg;b.style.display='inline-block';
+  setTimeout(()=>b.style.display='none',4000);
 }
 
-/* ── LOGIN ──────────────────────────────────────────────────────────────── */
-function doLogin() {
-  if ($('pw').value === PW) {
-    $('loginScreen').style.display = 'none';
-    $('app').style.display = 'flex';
-    $('app').style.flexDirection = 'column';
+/* LOGIN */
+function doLogin(){
+  if($('pw').value===PW){
+    $('loginScreen').style.display='none';
+    $('app').style.display='block';
     initApp();
-  } else {
-    $('pwErr').textContent = '비밀번호가 올바르지 않습니다';
-    $('pw').value = ''; $('pw').focus();
+  }else{
+    $('pwErr').textContent='비밀번호가 올바르지 않습니다';
+    $('pw').value='';$('pw').focus();
     $('pw').classList.add('err');
     setTimeout(()=>$('pw').classList.remove('err'),1500);
   }
 }
-$('pw').addEventListener('keydown', e => e.key==='Enter' && doLogin());
-$('loginBtn').addEventListener('click', doLogin);
+$('pw').addEventListener('keydown',e=>e.key==='Enter'&&doLogin());
+$('loginBtn').addEventListener('click',doLogin);
 
-/* ── INIT ───────────────────────────────────────────────────────────────── */
-function initApp() {
+/* INIT */
+function initApp(){
   loadData();
-  $('sGhTok').value = settings.ghToken || '';
-  $('sGistId').value = settings.gistId || '';
-  $('sSheetsUrl').value = settings.sheetsUrl || '';
-  $('sCustomTags').value = settings.customTags || '';
-  $('scriptCode').textContent = SCRIPT;
-  buildPresets(); buildTags([]); refreshAll();
+  $('sGhTok').value=settings.ghToken||'';
+  $('sGistId').value=settings.gistId||'';
+  $('sSheetsUrl').value=settings.sheetsUrl||'';
+  $('sCustomTags').value=settings.customTags||'';
+  $('scriptCode').textContent=SCRIPT;
+  buildPresets();buildTags([]);refreshAll();
 }
 
-/* ── TABS ───────────────────────────────────────────────────────────────── */
-document.querySelectorAll('.tbtn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
-function switchTab(id) {
-  document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on', b.dataset.t===id));
-  ['entry','list','analytics','settings','print'].forEach(t =>
-    $('tab-'+t).style.display = t===id ? 'block':'none'
-  );
-  if (id==='list') renderList();
-  if (id==='analytics') renderAnalytics();
-  if (id==='print') renderPrint();
+/* TABS */
+document.querySelectorAll('.tbtn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.t)));
+function switchTab(id){
+  if(id!=='analytics')destroyCharts();
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  ['entry','list','analytics','settings','print'].forEach(t=>
+    $('tab-'+t).style.display=t===id?'block':'none');
+  if(id==='list')renderList();
+  if(id==='analytics')renderAnalytics();
+  if(id==='print')renderPrint();
 }
 
-/* ── FORM ───────────────────────────────────────────────────────────────── */
-function buildPresets() {
-  $('preRow').innerHTML = P_AMTS.map(n =>
+/* FORM */
+function buildPresets(){
+  $('preRow').innerHTML=P_AMTS.map(n=>
     `<button class="prebtn" onclick="setAmt(${n})">${n}만원</button>`
   ).join('');
 }
-window.setAmt = n => { $('fAmt').value = n; updatePrev(); };
-
-$('fAmt').addEventListener('input', updatePrev);
-function updatePrev() {
-  const v = parseFloat($('fAmt').value);
-  $('amtPrev').textContent = isNaN(v)||v<=0 ? '' : `→ ${Math.round(v*10000).toLocaleString('ko-KR')}원`;
+window.setAmt=n=>{$('fAmt').value=n;updatePrev();};
+$('fAmt').addEventListener('input',updatePrev);
+function updatePrev(){
+  const v=parseFloat($('fAmt').value);
+  $('amtPrev').textContent=isNaN(v)||v<=0?'':`→  ${Math.round(v*10000).toLocaleString('ko-KR')}원`;
 }
-
-function buildTags(selected=[]) {
-  $('tagRow').innerHTML = allTags().map(t =>
-    `<button class="tbtnx${selected.includes(t)?' on':''}" onclick="toggleTag(this)">${t}</button>`
+function buildTags(sel=[]){
+  $('tagRow').innerHTML=allTags().map(t=>
+    `<button class="tbtnx${sel.includes(t)?' on':''}" onclick="toggleTag(this)">${t}</button>`
   ).join('');
 }
-window.toggleTag = btn => btn.classList.toggle('on');
-const selectedTags = () => [...$('tagRow').querySelectorAll('.tbtnx.on')].map(b=>b.textContent);
+window.toggleTag=btn=>btn.classList.toggle('on');
+const selectedTags=()=>[...$('tagRow').querySelectorAll('.tbtnx.on')].map(b=>b.textContent);
 
-/* org autocomplete */
-$('fOrg').addEventListener('input', () => {
-  const q = $('fOrg').value.toLowerCase().trim();
-  const list = $('acList');
-  if (!q) { list.style.display='none'; return; }
-  const m = orgs().filter(o=>o.toLowerCase().includes(q)&&o.toLowerCase()!==q).slice(0,5);
-  if (!m.length) { list.style.display='none'; return; }
-  list.innerHTML = m.map(o=>`<div class="acitem" onmousedown="pickOrg('${o}')">${o}</div>`).join('');
+$('fOrg').addEventListener('input',()=>{
+  const q=$('fOrg').value.toLowerCase().trim();
+  const list=$('acList');
+  if(!q){list.style.display='none';return;}
+  const m=orgs().filter(o=>o.toLowerCase().includes(q)&&o.toLowerCase()!==q).slice(0,5);
+  if(!m.length){list.style.display='none';return;}
+  list.innerHTML=m.map(o=>`<div class="acitem" onmousedown="pickOrg('${o}')">${o}</div>`).join('');
   list.style.display='block';
 });
-$('fOrg').addEventListener('blur', ()=>setTimeout(()=>$('acList').style.display='none',200));
-window.pickOrg = v => { $('fOrg').value=v; $('acList').style.display='none'; };
+$('fOrg').addEventListener('blur',()=>setTimeout(()=>$('acList').style.display='none',200));
+window.pickOrg=v=>{$('fOrg').value=v;$('acList').style.display='none';};
 
-$('subBtn').addEventListener('click', submitEntry);
-$('canBtn').addEventListener('click', cancelEdit);
+$('subBtn').addEventListener('click',submitEntry);
+$('canBtn').addEventListener('click',cancelEdit);
 
-function submitEntry() {
-  const name = $('fName').value.trim();
-  const amtRaw = parseFloat($('fAmt').value);
-  if (!name||isNaN(amtRaw)||amtRaw<=0) { notify('이름과 금액은 필수입니다',true); return; }
-  const entry = {
-    id: editId||genId(), name,
-    org: $('fOrg').value.trim(),
-    amount: Math.round(amtRaw*10000),
-    note: $('fNote').value.trim(),
-    tags: selectedTags(),
-    createdAt: editId ? entries.find(e=>e.id===editId)?.createdAt : new Date().toISOString()
+function submitEntry(){
+  const name=$('fName').value.trim();
+  const amtRaw=parseFloat($('fAmt').value);
+  if(!name||isNaN(amtRaw)||amtRaw<=0){notify('이름과 금액은 필수입니다',true);return;}
+  const entry={
+    id:editId||genId(),name,
+    org:$('fOrg').value.trim(),
+    amount:Math.round(amtRaw*10000),
+    note:$('fNote').value.trim(),
+    tags:selectedTags(),
+    createdAt:editId?entries.find(e=>e.id===editId)?.createdAt:new Date().toISOString()
   };
-  entries = editId ? entries.map(e=>e.id===editId?entry:e) : [...entries, entry];
-  persist(); autoSync();
-  notify(editId ? `${name}님 수정 완료` : `${name}님 등록 완료 (${toMan(entry.amount)})`);
-  resetForm(); refreshAll();
+  entries=editId?entries.map(e=>e.id===editId?entry:e):[...entries,entry];
+  persist();autoSync();
+  notify(editId?`${name}님 수정 완료`:`${name}님 등록 완료 (${toMan(entry.amount)})`);
+  resetForm();refreshAll();
 }
-
-function resetForm() {
+function resetForm(){
   ['fName','fOrg','fAmt','fNote'].forEach(id=>$(id).value='');
-  $('amtPrev').textContent=''; editId=null;
+  $('amtPrev').textContent='';editId=null;
   $('formTitle').innerHTML='<i class="ti ti-pencil"></i> 축의금 입력';
-  $('subBtn').textContent='등록하기'; $('canBtn').style.display='none';
+  $('subBtn').textContent='등록하기';$('canBtn').style.display='none';
   buildTags([]);
 }
-function cancelEdit() { editId=null; resetForm(); }
+function cancelEdit(){editId=null;resetForm();}
 
-window.editEntry = id => {
-  const e = entries.find(x=>x.id===id); if(!e) return;
-  editId=id; $('fName').value=e.name; $('fOrg').value=e.org;
-  $('fAmt').value=e.amount/10000; $('fNote').value=e.note;
-  updatePrev(); buildTags(e.tags);
+window.editEntry=id=>{
+  const e=entries.find(x=>x.id===id);if(!e)return;
+  editId=id;$('fName').value=e.name;$('fOrg').value=e.org;
+  $('fAmt').value=e.amount/10000;$('fNote').value=e.note;
+  updatePrev();buildTags(e.tags);
   $('formTitle').innerHTML='<i class="ti ti-pencil"></i> 수정 중';
-  $('subBtn').textContent='수정 완료'; $('canBtn').style.display='block';
-  switchTab('entry'); window.scrollTo(0,0);
+  $('subBtn').textContent='수정 완료';$('canBtn').style.display='block';
+  switchTab('entry');window.scrollTo(0,0);
 };
-window.deleteEntry = id => {
-  if(!confirm('삭제하시겠습니까?')) return;
-  entries = entries.filter(e=>e.id!==id);
-  persist(); autoSync(); refreshAll(); notify('삭제되었습니다');
+window.deleteEntry=id=>{
+  if(!confirm('삭제하시겠습니까?'))return;
+  entries=entries.filter(e=>e.id!==id);
+  persist();autoSync();refreshAll();notify('삭제되었습니다');
 };
 
-/* ── REFRESH ALL ────────────────────────────────────────────────────────── */
-function refreshAll() {
-  const tot = entries.reduce((s,e)=>s+e.amount,0);
-  const cnt = entries.length;
-  $('hStat').textContent = `${cnt}명 · ${toMan(tot)}`;
-  $('sTotCnt').textContent = cnt+'명';
-  $('sTotAmt').textContent = toMan(tot);
-  $('sAvg').textContent = cnt ? toMan(Math.round(tot/cnt)) : '0';
+/* REFRESH */
+function refreshAll(){
+  const tot=entries.reduce((s,e)=>s+e.amount,0);
+  const cnt=entries.length;
+  $('hStat').textContent=`${cnt}명 · ${toMan(tot)}`;
+  $('sTotCnt').textContent=cnt+'명';
+  $('sTotAmt').textContent=toMan(tot);
+  $('sAvg').textContent=cnt?toMan(Math.round(tot/cnt)):'0';
   buildFilterTags();
 }
 
-/* ── LIST ───────────────────────────────────────────────────────────────── */
-$('searchInp').addEventListener('input', renderList);
-$('sortSel').addEventListener('change', renderList);
+/* LIST */
+$('searchInp').addEventListener('input',renderList);
+$('sortSel').addEventListener('change',renderList);
+window.addEventListener('resize',()=>{
+  if($('tab-list').style.display!=='none')renderList();
+});
 
-function buildFilterTags() {
-  const used = [...new Set(entries.flatMap(e=>e.tags))];
-  $('filterTagRow').innerHTML =
-    `<button class="tbtnx${!filterTag?' on':''}" onclick="setFilter('')">전체</button>` +
+function buildFilterTags(){
+  const used=[...new Set(entries.flatMap(e=>e.tags))];
+  $('filterTagRow').innerHTML=
+    `<button class="tbtnx${!filterTag?' on':''}" onclick="setFilter('')">전체</button>`+
     used.map(t=>`<button class="tbtnx${filterTag===t?' on':''}" onclick="setFilter('${t}')">${t}</button>`).join('');
 }
-window.setFilter = t => { filterTag=t; buildFilterTags(); renderList(); };
+window.setFilter=t=>{filterTag=t;buildFilterTags();renderList();};
 
-function renderList() {
-  const q = ($('searchInp').value||'').toLowerCase();
-  const sort = $('sortSel').value;
-  const idxMap = {}; entries.forEach((e,i)=>idxMap[e.id]=i+1);
-  let list = entries.filter(e=>{
-    const mq = !q||[e.name,e.org,e.note,...e.tags].some(v=>v?.toLowerCase().includes(q));
-    const mt = !filterTag||e.tags.includes(filterTag);
+function renderList(){
+  const q=($('searchInp').value||'').toLowerCase();
+  const sort=$('sortSel').value;
+  const idxMap={};entries.forEach((e,i)=>idxMap[e.id]=i+1);
+  let list=entries.filter(e=>{
+    const mq=!q||[e.name,e.org,e.note,...e.tags].some(v=>v?.toLowerCase().includes(q));
+    const mt=!filterTag||e.tags.includes(filterTag);
     return mq&&mt;
   }).sort((a,b)=>{
-    if(sort==='amount') return b.amount-a.amount;
-    if(sort==='name') return a.name.localeCompare(b.name,'ko');
+    if(sort==='amount')return b.amount-a.amount;
+    if(sort==='name')return a.name.localeCompare(b.name,'ko');
     return new Date(b.createdAt)-new Date(a.createdAt);
   });
-  const filtTot = list.reduce((s,e)=>s+e.amount,0);
-  $('entryList').innerHTML = list.length===0
-    ? `<div class="empty"><i class="ti ti-inbox" style="font-size:32px;display:block;margin-bottom:8px"></i>데이터가 없습니다</div>`
-    : list.map(e=>`
+  const filtTot=list.reduce((s,e)=>s+e.amount,0);
+  if(!list.length){
+    $('entryList').innerHTML=`<div class="empty"><i class="ti ti-inbox" style="font-size:32px;display:block;margin-bottom:8px"></i>데이터가 없습니다</div>`;
+    return;
+  }
+  const footer=`<div style="text-align:right;font-size:12px;color:var(--muted);padding:10px 4px">${list.length}건 · 합계 ${toMan(filtTot)}</div>`;
+
+  if(isDesktop()){
+    /* TABLE VIEW */
+    $('entryList').innerHTML=`
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)">
+        <table class="list-tbl">
+          <thead><tr>
+            <th class="td-num">#</th>
+            <th>이름</th><th>소속</th>
+            <th style="text-align:right">금액</th>
+            <th>분류</th><th>비고</th>
+            <th style="text-align:right">작업</th>
+          </tr></thead>
+          <tbody>${list.map(e=>`
+            <tr>
+              <td class="td-num">${idxMap[e.id]}</td>
+              <td class="td-name">${e.name}</td>
+              <td class="td-org">${e.org||'-'}</td>
+              <td class="td-amt">${toMan(e.amount)}<br><span style="font-size:10px;color:var(--muted);font-family:var(--font);font-weight:400">${toWon(e.amount)}</span></td>
+              <td class="td-tag">${e.tags.map(t=>`<span class="etag">${t}</span>`).join(' ')||'-'}</td>
+              <td class="td-note">${e.note||''}</td>
+              <td class="td-act">
+                <button class="eebtn ed" onclick="editEntry('${e.id}')"><i class="ti ti-edit"></i> 수정</button>
+                <button class="eebtn dl" onclick="deleteEntry('${e.id}')"><i class="ti ti-trash"></i> 삭제</button>
+              </td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>${footer}`;
+  }else{
+    /* CARD VIEW (mobile/tablet) */
+    $('entryList').innerHTML=list.map(e=>`
       <div class="ecard">
         <div class="enum">${idxMap[e.id]}</div>
         <div class="emain">
@@ -636,244 +864,735 @@ function renderList() {
           <div class="eamt">${toMan(e.amount)}</div>
           <div class="eamt2">${toWon(e.amount)}</div>
         </div>
-      </div>`).join('')
-    + `<div style="text-align:center;font-size:12px;color:var(--muted);padding:10px 0">
-        ${list.length}건 · 합계 ${toMan(filtTot)}</div>`;
+      </div>`).join('')+footer;
+  }
 }
 
-/* ── ANALYTICS ──────────────────────────────────────────────────────────── */
-function renderAnalytics() {
-  const tot = entries.reduce((s,e)=>s+e.amount,0);
-  const cnt = entries.length;
-  const avg = cnt ? Math.round(tot/cnt) : 0;
-  const max = cnt ? Math.max(...entries.map(e=>e.amount)) : 0;
-  $('aTotal').textContent = toMan(tot); $('aCnt').textContent = cnt+'명';
-  $('aAvg').textContent = toMan(avg); $('aMax').textContent = toMan(max);
-  const mkTbl = (rows, emptyMsg) => {
-    if(!rows.length) return `<div class="empty">${emptyMsg}</div>`;
-    const maxT = rows[0][1].t||1;
-    return `<div style="overflow-x:auto"><table class="dtbl">
-      <thead><tr><th>항목</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
-      <tbody>${rows.map(([k,d])=>`<tr>
-        <td>${k}<div class="bw"><div class="bf" style="width:${Math.round(d.t/maxT*100)}%"></div></div></td>
-        <td style="text-align:center">${d.c}명</td>
-        <td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(d.t)}</td>
-      </tr>`).join('')}</tbody></table></div>`;
-  };
-  /* org */
-  const byOrg={};
-  entries.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
-  $('aOrg').innerHTML = mkTbl(Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t), '소속 데이터 없음');
-  /* tag */
+/* ANALYTICS */
+let _charts={};
+function destroyCharts(){Object.values(_charts).forEach(c=>{try{c.destroy();}catch{}});_charts={};}
+
+function renderAnalytics(){
+  destroyCharts();
+  const tot=entries.reduce((s,e)=>s+e.amount,0);
+  const cnt=entries.length;
+  const avg=cnt?Math.round(tot/cnt):0;
+  const max=cnt?Math.max(...entries.map(e=>e.amount)):0;
+
+  $('aTotal').textContent=cnt+'명';
+  $('aCnt').textContent=toMan(tot);
+  $('aAvg').textContent=toMan(avg);
+  $('aMax').textContent=toMan(max);
+
+  if(!cnt||typeof Chart==='undefined'){
+    ['chartTag','chartOrg','chartBkt','chartTime'].forEach(id=>{
+      const c=$(id);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);
+    });
+    return;
+  }
+
+  Chart.defaults.font.family="'Noto Sans KR',sans-serif";
+  Chart.defaults.font.size=11;
+  Chart.defaults.color='#8A7560';
+
+  const GOLD_PALETTE=[
+    '#1A5FA8','#C49A3C','#C0392B','#6B3FA0','#16855A',
+    '#D4770A','#1A7E8C','#8B1A4A','#3B6B9A','#7B4F2E',
+    '#3A8A3A','#9A1A6B'
+  ];
+  const gridColor='rgba(0,0,0,0.04)';
+
+  /* ── 1. DONUT: tag distribution ── */
   const byTag={};
   entries.forEach(e=>{const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});});
-  const tagRows = Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t).map(([t,d])=>
-    [`<span style="background:var(--pale);color:var(--gold);padding:2px 7px;border-radius:20px;font-size:11px">${t}</span>`, d]);
-  $('aTag').innerHTML = tagRows.length ? `<div style="overflow-x:auto"><table class="dtbl">
-    <thead><tr><th>분류</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
-    <tbody>${tagRows.map(([k,d])=>`<tr><td>${k}</td><td style="text-align:center">${d.c}명</td><td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(d.t)}</td></tr>`).join('')}</tbody></table></div>`
-    : '<div class="empty">태그 없음</div>';
-  /* bracket */
-  const bkts = BRACKETS.map(b=>({...b,c:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).length,t:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).reduce((s,e)=>s+e.amount,0)})).filter(b=>b.c>0);
-  $('aBkt').innerHTML = bkts.length ? `<div style="overflow-x:auto"><table class="dtbl">
-    <thead><tr><th>금액대</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
-    <tbody>${bkts.map(b=>`<tr><td>${b.l}</td><td style="text-align:center">${b.c}명</td><td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(b.t)}</td></tr>`).join('')}</tbody></table></div>`
-    : '<div class="empty">데이터 없음</div>';
+  const tagList=Object.entries(byTag).sort((a,b)=>b[1].c-a[1].c);
+  if(tagList.length){
+    $('donutVal').textContent=cnt+'명';
+    const ctx=$('chartTag').getContext('2d');
+    _charts.tag=new Chart(ctx,{
+      type:'doughnut',
+      data:{
+        labels:tagList.map(([t])=>t),
+        datasets:[{
+          data:tagList.map(([,d])=>d.c),
+          backgroundColor:GOLD_PALETTE.slice(0,tagList.length),
+          borderColor:'#FAF7F2',borderWidth:3,hoverOffset:10
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw}명 (${Math.round(ctx.raw/cnt*100)}%)`}}
+        },
+        animation:{animateRotate:true,duration:700}
+      }
+    });
+    $('tagLegend').innerHTML=tagList.map(([t,d],i)=>`
+      <div class="tag-legend-row">
+        <div class="tag-dot" style="background:${GOLD_PALETTE[i]}"></div>
+        <div class="tag-name">${t}</div>
+        <div class="tag-cnt">${d.c}명</div>
+        <div class="tag-amt">${toMan(d.t)}</div>
+      </div>`).join('');
+  }
+
+  /* ── 2. HORIZONTAL BAR: org top10 ── */
+  const byOrg={};
+  entries.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
+  const orgList=Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t).slice(0,10);
+  if(orgList.length){
+    const ctx=$('chartOrg').getContext('2d');
+    _charts.org=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:orgList.map(([o])=>o.length>9?o.slice(0,9)+'…':o),
+        datasets:[{
+          label:'합계',
+          data:orgList.map(([,d])=>d.t),
+          backgroundColor:orgList.map((_,i)=>`rgba(154,110,26,${1-i*0.07})`),
+          borderRadius:4,borderSkipped:false
+        }]
+      },
+      options:{
+        indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>` ${(ctx.raw/10000).toLocaleString()}만원 (${orgList[ctx.dataIndex][1].c}명)`}}
+        },
+        scales:{
+          x:{grid:{color:gridColor},ticks:{callback:v=>(v/10000).toLocaleString()+'만',maxTicksLimit:6}},
+          y:{grid:{display:false},ticks:{font:{size:11}}}
+        },
+        animation:{duration:700}
+      }
+    });
+  }
+
+  /* ── 3. VERTICAL BAR: amount bracket ── */
+  const bkts=BRACKETS.map(b=>({...b,
+    c:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).length,
+    t:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).reduce((s,e)=>s+e.amount,0)
+  })).filter(b=>b.c>0);
+  if(bkts.length){
+    const ctx=$('chartBkt').getContext('2d');
+    _charts.bkt=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:bkts.map(b=>b.l),
+        datasets:[{
+          label:'인원',
+          data:bkts.map(b=>b.c),
+          backgroundColor:bkts.map((_,i)=>GOLD_PALETTE[i%GOLD_PALETTE.length]),
+          borderRadius:6,borderSkipped:false
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>` ${ctx.raw}명 (${toMan(bkts[ctx.dataIndex].t)})`}}
+        },
+        scales:{
+          y:{grid:{color:gridColor},ticks:{stepSize:1}},
+          x:{grid:{display:false},ticks:{font:{size:10}}}
+        },
+        animation:{duration:700}
+      }
+    });
+  }
+
+  /* ── 4. LINE: ±1시간 윈도우 (14:30~16:30), 범위 밖은 앞뒤 통합 버킷 ── */
+  {
+    const SLOT=5, CER_MIN=15*60+30;
+    const WIN_START=CER_MIN-60;  /* 14:30 */
+    const WIN_END  =CER_MIN+60;  /* 16:30 */
+
+    /* 5분 슬롯: 앞통합 + 14:30~16:25 + 뒤통합 */
+    const slots=[];
+    /* 첫 슬롯: 1시간 전 이전 통합 */
+    slots.push({lbl:`1시간 전\n(${String(WIN_START/60|0).padStart(2,'0')}:${String(WIN_START%60).padStart(2,'0')} 이전)`, shortLbl:'이전', cnt:0, min:WIN_START-1, isBefore:true});
+    /* 5분 간격 윈도우 */
+    for(let m=WIN_START; m<WIN_END; m+=SLOT){
+      const h=Math.floor(m/60), mn=m%60;
+      slots.push({lbl:`${String(h).padStart(2,'0')}:${String(mn).padStart(2,'0')}`, cnt:0, min:m});
+    }
+    /* 마지막 슬롯: 1시간 후 이후 통합 */
+    slots.push({lbl:`1시간 후\n(${String(WIN_END/60|0).padStart(2,'0')}:${String(WIN_END%60).padStart(2,'0')} 이후)`, shortLbl:'이후', cnt:0, min:WIN_END+1, isAfter:true});
+
+    /* 데이터 분배 */
+    entries.forEach(e=>{
+      const d=new Date(e.createdAt);
+      const tm=d.getHours()*60+d.getMinutes();
+      const bs=Math.floor(tm/SLOT)*SLOT;
+      if(bs<WIN_START){
+        slots[0].cnt++;
+      } else if(bs>=WIN_END){
+        slots[slots.length-1].cnt++;
+      } else {
+        const s=slots.find(s=>s.min===bs);
+        if(s) s.cnt++;
+      }
+    });
+
+    const cerIdx=slots.findIndex(s=>s.min===CER_MIN);
+    const peakIdx=slots.reduce((pi,s,i)=>s.cnt>slots[pi].cnt?i:pi,0);
+
+    /* 예식 기준선 + 배경 구분 플러그인 */
+    const cerPlugin={
+      id:'cerLine',
+      beforeDraw(chart){
+        if(cerIdx<0) return;
+        const{ctx,chartArea:{left,right,top,bottom},scales:{x}}=chart;
+        const cx=x.getPixelForValue(cerIdx);
+        /* 예식 전 구간: 연한 골드 */
+        ctx.save(); ctx.fillStyle='rgba(245,237,216,0.5)';
+        ctx.fillRect(left,top,Math.max(0,cx-left),bottom-top); ctx.restore();
+        /* 예식 후 구간: 연한 아이보리 */
+        ctx.save(); ctx.fillStyle='rgba(250,247,242,0.35)';
+        ctx.fillRect(cx,top,Math.max(0,right-cx),bottom-top); ctx.restore();
+        /* 통합 버킷 구분선 (첫/마지막) */
+        const x0=x.getPixelForValue(1), xn=x.getPixelForValue(slots.length-2);
+        [x0, xn].forEach(px=>{
+          ctx.save(); ctx.beginPath(); ctx.moveTo(px,top); ctx.lineTo(px,bottom);
+          ctx.strokeStyle='rgba(139,113,96,0.25)'; ctx.lineWidth=1; ctx.setLineDash([3,3]); ctx.stroke();
+          ctx.setLineDash([]); ctx.restore();
+        });
+      },
+      afterDatasetsDraw(chart){
+        if(cerIdx<0) return;
+        const{ctx,chartArea:{top,bottom},scales:{x}}=chart;
+        const cx=x.getPixelForValue(cerIdx);
+        /* 수직 실선 */
+        ctx.save();
+        ctx.beginPath(); ctx.moveTo(cx,top+22); ctx.lineTo(cx,bottom);
+        ctx.strokeStyle='#B5341E'; ctx.lineWidth=2; ctx.setLineDash([5,3]); ctx.stroke();
+        ctx.setLineDash([]);
+        /* 라벨 뱃지 */
+        const lw=72, lh=18, lx=cx-lw/2, ly=top+2;
+        ctx.fillStyle='#B5341E';
+        if(ctx.roundRect) ctx.roundRect(lx,ly,lw,lh,4); else ctx.rect(lx,ly,lw,lh);
+        ctx.fill();
+        ctx.fillStyle='#fff'; ctx.font="bold 10px 'Noto Sans KR',sans-serif";
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('★ 예식 시작 15:30', cx, ly+lh/2);
+        ctx.restore();
+      }
+    };
+
+    const ctx=$('chartTime').getContext('2d');
+    _charts.time=new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:slots.map(s=>s.lbl),
+        datasets:[{
+          label:'접수 건수',
+          data:slots.map(s=>s.cnt),
+          borderColor:'#9A6E1A',
+          backgroundColor(ctx){
+            const g=ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);
+            g.addColorStop(0,'rgba(196,154,60,0.28)');
+            g.addColorStop(1,'rgba(196,154,60,0.02)');
+            return g;
+          },
+          borderWidth:2.5,
+          pointBackgroundColor:slots.map((_,i)=>
+            i===cerIdx?'#B5341E':
+            i===peakIdx?'#C49A3C':
+            (slots[i].isBefore||slots[i].isAfter)?'#8A7560':'#9A6E1A'),
+          pointBorderColor:slots.map((_,i)=>(i===cerIdx||i===peakIdx)?'#fff':'#FAF7F2'),
+          pointBorderWidth:slots.map((_,i)=>(i===cerIdx||i===peakIdx)?2:1),
+          pointRadius:slots.map((_,i)=>
+            i===cerIdx?7:
+            i===peakIdx?6:
+            (slots[i].isBefore||slots[i].isAfter)?5:
+            (slots[i].cnt>0?3:0)),
+          pointStyle:slots.map((_,i)=>(slots[i].isBefore||slots[i].isAfter)?'rectRot':'circle'),
+          pointHoverRadius:9,
+          fill:true, tension:0.35, spanGaps:true
+        }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        layout:{padding:{top:30, left:4, right:4}},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              title:items=>{
+                const i=items[0].dataIndex, s=slots[i];
+                if(s.isBefore) return `14:30 이전 (1시간 전 이전)`;
+                if(s.isAfter)  return `16:30 이후 (1시간 후 이후)`;
+                const diff=s.min-CER_MIN;
+                if(diff===0)   return s.lbl+' ★ 예식 시작';
+                if(diff<0)     return s.lbl+` (예식 ${Math.abs(diff)}분 전)`;
+                return s.lbl+` (예식 후 ${Math.floor(diff/60)?Math.floor(diff/60)+'시간 ':''}${diff%60}분)`;
+              },
+              label:ctx=>ctx.raw>0?` ${ctx.raw}건 접수`:'  -'
+            },
+            backgroundColor:'rgba(44,36,22,0.92)',
+            titleColor:'#F5EDD8', bodyColor:'#E8D5A3',
+            padding:10, cornerRadius:8
+          }
+        },
+        scales:{
+          y:{
+            grid:{color:gridColor},
+            ticks:{stepSize:1, precision:0},
+            min:0,
+            title:{display:true, text:'접수 건수', font:{size:10}, color:'#8A7560'}
+          },
+          x:{
+            grid:{color:'rgba(0,0,0,0.03)'},
+            ticks:{
+              callback(val,i){
+                const s=slots[i]; if(!s) return '';
+                /* 통합 버킷은 짧은 라벨 */
+                if(s.isBefore) return '◀ 이전';
+                if(s.isAfter)  return '이후 ▶';
+                /* 정각·30분만 */
+                return (s.min%30===0) ? s.lbl : '';
+              },
+              maxRotation:0, autoSkip:false, font:{size:10}
+            }
+          }
+        },
+        animation:{duration:800, easing:'easeInOutQuart'}
+      },
+      plugins:[cerPlugin]
+    });
+
+    /* 통계 뱃지 */
+    const beforeCnt=slots.slice(0, cerIdx<0?slots.length:cerIdx).reduce((s,x)=>s+x.cnt,0);
+    const afterCnt =cerIdx<0?0:slots.slice(cerIdx).reduce((s,x)=>s+x.cnt,0);
+    const peakSlot=slots[peakIdx];
+    $('timeStats').innerHTML=`
+      <span style="background:var(--pale);color:var(--gold);padding:3px 10px;border-radius:20px;font-size:11px">
+        예식 전 ${beforeCnt}건
+      </span>
+      <span style="background:#FFF5F3;color:#B5341E;padding:3px 10px;border-radius:20px;font-size:11px">
+        예식 후 ${afterCnt}건
+      </span>
+      ${peakSlot&&peakSlot.cnt>0?`<span style="background:var(--paleb);color:var(--muted);padding:3px 10px;border-radius:20px;font-size:11px">
+        피크 ${peakSlot.isBefore?'14:30 이전':peakSlot.isAfter?'16:30 이후':peakSlot.lbl} (${peakSlot.cnt}건)
+      </span>`:''}`;
+  }
+
+  /* ── 5. TOP 10 LIST ── */
+  const RANK_BG =['#C49A3C','#8A7560','#9A6E1A','#E8D5A3','#E8D5A3','#F5EDD8','#F5EDD8','#F5EDD8','#F5EDD8','#F5EDD8'];
+  const RANK_FG =['#fff',   '#fff',   '#fff',   '#7B5219','#7B5219','#8A7560','#8A7560','#8A7560','#8A7560','#8A7560'];
+  const top10=[...entries].sort((a,b)=>b.amount-a.amount).slice(0,10);
+  $('aTop').innerHTML=top10.map((e,i)=>`
+    <div class="top-row">
+      <div class="top-badge" style="background:${RANK_BG[i]};color:${RANK_FG[i]};font-size:13px;font-weight:700">
+        ${i+1}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="top-name">${e.name}</div>
+        <div class="top-sub">${e.org||''}${e.org&&e.tags.length?' · ':''}${e.tags.join(' · ')}</div>
+      </div>
+      <div class="top-amt">${toMan(e.amount)}</div>
+    </div>`).join('');
 }
 
-/* ── PRINT / PDF ────────────────────────────────────────────────────────── */
-function renderPrint() {
-  const sorted = [...entries].sort((a,b)=>b.amount-a.amount);
-  const tot = entries.reduce((s,e)=>s+e.amount,0);
-  $('printPreview').innerHTML = buildPrintHTML(sorted, tot, true);
-}
-function buildPrintHTML(sorted, tot, preview=false) {
-  const rowStyle = preview ? '' : '';
-  return `
-    <div style="text-align:center;margin-bottom:15px;padding-bottom:12px;border-bottom:2px solid var(--pale)">
-      <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold)">
-        ${W.groom} · ${W.bride} 결혼식 축의금
-      </div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">
-        ${W.date} · 총 ${entries.length}명 · ${toWon(tot)}
-      </div>
+/* ── A4 PRINT HTML builder (명단 + 분석) ────────────────────────────── */
+function buildA4HTML(sorted,tot){
+  const cnt=sorted.length;
+  const avg=cnt?Math.round(tot/cnt):0;
+  const max=cnt?sorted[0].amount:0;
+  const dt=new Date().toLocaleDateString('ko-KR');
+
+  /* 소속별 */
+  const byOrg={};
+  sorted.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
+  const orgList=Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t);
+  const maxOrgT=orgList[0]?.[1]?.t||1;
+
+  /* 태그별 */
+  const byTag={};
+  sorted.forEach(e=>{const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});});
+  const tagList=Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t);
+
+  /* 금액대 */
+  const bkts=BRACKETS.map(b=>({...b,
+    c:sorted.filter(e=>e.amount>=b.min&&e.amount<=b.max).length,
+    t:sorted.filter(e=>e.amount>=b.min&&e.amount<=b.max).reduce((s,e)=>s+e.amount,0)
+  })).filter(b=>b.c>0);
+  const maxBktC=bkts[0]?.c||1;
+
+  /* 명단 행 */
+  const tableRows=sorted.map((e,i)=>`
+    <tr style="${i%2===0?'background:#FDFAF5':'background:#fff'}">
+      <td style="text-align:center;color:#8A7560;font-size:10px">${i+1}</td>
+      <td style="font-weight:600">${e.name}</td>
+      <td style="color:#6B5A48">${e.org||'—'}</td>
+      <td style="text-align:right;font-weight:700;color:#7B5219">${(e.amount/10000).toLocaleString()}만원</td>
+      <td style="font-size:10px;color:#6B5A48">${e.tags.join(' · ')||'—'}</td>
+      <td style="font-size:10px;color:#8A7560">${e.note||''}</td>
+    </tr>`).join('');
+
+  /* 소속 행 (바 포함) */
+  const orgRows=orgList.map(([o,d])=>`
+    <tr>
+      <td>${o}</td>
+      <td style="text-align:center">${d.c}명</td>
+      <td style="text-align:right;font-weight:600;color:#7B5219">${(d.t/10000).toLocaleString()}만원</td>
+      <td style="width:80px;padding-right:6px">
+        <div style="height:5px;background:#EDE4D4;border-radius:3px;overflow:hidden">
+          <div style="height:100%;background:#7B5219;border-radius:3px;width:${Math.round(d.t/maxOrgT*100)}%"></div>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  /* 태그 행 */
+  const tagRows=tagList.map(([t,d])=>`
+    <tr>
+      <td style="font-weight:500">${t}</td>
+      <td style="text-align:center">${d.c}명</td>
+      <td style="text-align:right;font-weight:600;color:#7B5219">${(d.t/10000).toLocaleString()}만원</td>
+      <td style="text-align:right;color:#8A7560;font-size:10px">${Math.round(d.t/tot*100)}%</td>
+    </tr>`).join('');
+
+  /* 금액대 행 (바 포함) */
+  const bktRows=bkts.map(b=>`
+    <tr>
+      <td style="font-weight:500">${b.l}</td>
+      <td style="text-align:center">${b.c}명</td>
+      <td style="text-align:right;font-weight:600;color:#7B5219">${(b.t/10000).toLocaleString()}만원</td>
+      <td style="width:90px;padding-right:6px">
+        <div style="height:5px;background:#EDE4D4;border-radius:3px;overflow:hidden">
+          <div style="height:100%;background:#C49A3C;border-radius:3px;width:${Math.round(b.c/maxBktC*100)}%"></div>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  /* Top 10 행 */
+  const top10=sorted.slice(0,10);
+  const topRows=top10.map((e,i)=>`
+    <tr style="${i%2===0?'background:#FDFAF5':'background:#fff'}">
+      <td style="text-align:center;font-weight:700;color:${i<3?'#7B5219':'#8A7560'}">${i+1}</td>
+      <td style="font-weight:700">${e.name}</td>
+      <td style="color:#6B5A48">${e.org||'—'}</td>
+      <td style="text-align:right;font-weight:700;color:#7B5219">${(e.amount/10000).toLocaleString()}만원</td>
+      <td style="font-size:10px;color:#6B5A48">${e.tags.join(' · ')||'—'}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+@page{size:A4 portrait;margin:15mm 18mm 18mm 18mm}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'Noto Sans KR',sans-serif;font-size:10.5px;color:#2C2416;background:#fff}
+/* HEADER */
+.hdr{background:#7B5219;color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.hdr-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700}
+.hdr-sub{font-size:10px;opacity:.8;margin-top:3px}
+.hdr-ring{font-size:24px;opacity:.55}
+/* SUMMARY BAR */
+.sumbar{display:grid;grid-template-columns:repeat(4,1fr);background:#F5EDD8;border-bottom:2px solid #C49A3C}
+.sumcell{padding:8px 12px;text-align:center;border-right:1px solid #E2D4BE}
+.sumcell:last-child{border-right:none}
+.sumval{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:#7B5219}
+.sumlbl{font-size:9px;color:#8A7560;margin-top:2px}
+/* SECTION TITLE */
+.sec{font-family:'Noto Serif KR',serif;font-size:11px;font-weight:700;color:#7B5219;
+  padding:6px 10px 5px;border-bottom:1.5px solid #C49A3C;background:#FBF7EE;
+  margin-bottom:0;display:flex;align-items:center;gap:5px}
+/* PAGE BREAK */
+.pg-break{page-break-before:always;margin-top:0}
+/* TABLES */
+table{width:100%;border-collapse:collapse}
+thead tr{background:#7B5219;color:#fff}
+th{padding:6px 8px;text-align:left;font-size:9.5px;font-weight:600;letter-spacing:.2px}
+td{padding:5px 8px;border-bottom:1px solid #EDE4D4;vertical-align:middle}
+.n{text-align:right}
+/* GRID LAYOUT */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+.wrap{margin-top:12px}
+.box{border:1px solid #E2D4BE;border-radius:4px;overflow:hidden}
+/* FOOTER */
+.foot{margin-top:14px;padding:9px 12px;background:#FBF7EE;border:1px solid #E2D4BE;
+  border-radius:4px;display:flex;align-items:center;justify-content:space-between;font-size:10px}
+.foot strong{color:#7B5219}
+/* ROW HOVER (screen only) */
+tr:hover td{background:#FBF7EE}
+</style>
+</head>
+<body>
+
+<!-- ═══ 페이지 1: 헤더 + 명단 ═══ -->
+<div class="hdr">
+  <div>
+    <div class="hdr-title">이준환 · 최희수 결혼식 축의금</div>
+    <div class="hdr-sub">${W.date} &nbsp;|&nbsp; 출력일 ${dt} &nbsp;|&nbsp; 총 ${cnt}명</div>
+  </div>
+  <div class="hdr-ring">💍</div>
+</div>
+
+<div class="sumbar">
+  <div class="sumcell"><div class="sumval">${cnt.toLocaleString()}명</div><div class="sumlbl">총 인원</div></div>
+  <div class="sumcell"><div class="sumval">${(tot/10000).toLocaleString()}만원</div><div class="sumlbl">총 금액</div></div>
+  <div class="sumcell"><div class="sumval">${(avg/10000).toLocaleString()}만원</div><div class="sumlbl">평균 금액</div></div>
+  <div class="sumcell"><div class="sumval">${(max/10000).toLocaleString()}만원</div><div class="sumlbl">최고 금액</div></div>
+</div>
+
+<div class="wrap">
+  <div class="sec">📋 축의금 명단 (금액 높은 순)</div>
+  <table>
+    <thead><tr>
+      <th style="width:24px">#</th><th style="width:54px">이름</th>
+      <th style="width:88px">소속</th><th style="width:62px;text-align:right">금액</th>
+      <th style="width:78px">분류</th><th>비고</th>
+    </tr></thead>
+    <tbody>${tableRows}</tbody>
+  </table>
+</div>
+
+<!-- ═══ 페이지 2: 분석 ═══ -->
+<div class="pg-break">
+  <div class="hdr">
+    <div>
+      <div class="hdr-title">이준환 · 최희수 결혼식 — 분석 요약</div>
+      <div class="hdr-sub">${W.date} &nbsp;|&nbsp; 출력일 ${dt}</div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="dtbl" style="min-width:480px">
-        <thead><tr>
-          <th style="width:28px">번</th><th>이름</th><th>소속</th>
-          <th style="text-align:right">금액</th><th>분류</th><th>비고</th>
-        </tr></thead>
-        <tbody>${sorted.map((e,i)=>`<tr>
-          <td style="color:var(--muted)">${i+1}</td>
-          <td style="font-weight:700">${e.name}</td>
-          <td style="color:var(--muted)">${e.org||'-'}</td>
-          <td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(e.amount)}</td>
-          <td style="font-size:11px">${e.tags.join(', ')||'-'}</td>
-          <td style="font-size:11px;color:var(--muted)">${e.note||''}</td>
-        </tr>`).join('')}</tbody>
+    <div class="hdr-ring">📊</div>
+  </div>
+
+  <div class="sumbar">
+    <div class="sumcell"><div class="sumval">${cnt.toLocaleString()}명</div><div class="sumlbl">총 인원</div></div>
+    <div class="sumcell"><div class="sumval">${(tot/10000).toLocaleString()}만원</div><div class="sumlbl">총 금액</div></div>
+    <div class="sumcell"><div class="sumval">${(avg/10000).toLocaleString()}만원</div><div class="sumlbl">평균 금액</div></div>
+    <div class="sumcell"><div class="sumval">${(max/10000).toLocaleString()}만원</div><div class="sumlbl">최고 금액</div></div>
+  </div>
+
+  <!-- 소속별 + 태그별 -->
+  <div class="grid2">
+    <div class="box">
+      <div class="sec">🏢 소속별 현황 (상위 ${Math.min(orgList.length,15)}개)</div>
+      <table>
+        <thead><tr><th>소속</th><th style="text-align:center;width:36px">인원</th><th class="n" style="width:56px">합계</th><th style="width:84px"></th></tr></thead>
+        <tbody>${orgList.slice(0,15).map(([o,d])=>`
+          <tr>
+            <td>${o}</td><td style="text-align:center">${d.c}명</td>
+            <td style="text-align:right;font-weight:600;color:#7B5219">${(d.t/10000).toLocaleString()}만원</td>
+            <td style="padding-right:6px">
+              <div style="height:5px;background:#EDE4D4;border-radius:3px;overflow:hidden">
+                <div style="height:100%;background:#7B5219;border-radius:3px;width:${Math.round(d.t/maxOrgT*100)}%"></div>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
       </table>
     </div>
-    <div style="margin-top:14px;background:var(--paleb);border-radius:9px;padding:12px;
-      display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
-      <div><span style="color:var(--muted)">총 인원 </span><strong>${entries.length}명</strong></div>
-      <div><span style="color:var(--muted)">총 금액 </span><strong>${toWon(tot)}</strong></div>
-      <div><span style="color:var(--muted)">평균 </span><strong>${entries.length?toWon(Math.round(tot/entries.length)):'0원'}</strong></div>
-    </div>`;
+    <div class="box">
+      <div class="sec">🏷️ 분류(태그)별 현황</div>
+      <table>
+        <thead><tr><th>분류</th><th style="text-align:center;width:36px">인원</th><th class="n" style="width:56px">합계</th><th class="n" style="width:36px">비율</th></tr></thead>
+        <tbody>${tagRows}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 금액대별 + Top 10 -->
+  <div class="grid2" style="margin-top:12px">
+    <div class="box">
+      <div class="sec">💰 금액대별 분포</div>
+      <table>
+        <thead><tr><th>금액대</th><th style="text-align:center;width:36px">인원</th><th class="n" style="width:56px">합계</th><th style="width:84px"></th></tr></thead>
+        <tbody>${bktRows}</tbody>
+      </table>
+    </div>
+    <div class="box">
+      <div class="sec">🏅 순위 Top 10</div>
+      <table>
+        <thead><tr><th style="width:22px;text-align:center">#</th><th style="width:48px">이름</th><th>소속</th><th class="n" style="width:56px">금액</th></tr></thead>
+        <tbody>${topRows}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>총 <strong>${cnt}명</strong> &nbsp;·&nbsp; 합계 <strong>${(tot/10000).toLocaleString()}만원</strong> &nbsp;·&nbsp; 평균 <strong>${(avg/10000).toLocaleString()}만원</strong> &nbsp;·&nbsp; 최고 <strong>${(max/10000).toLocaleString()}만원</strong></div>
+    <div style="color:#8A7560">${dt} 출력</div>
+  </div>
+</div>
+
+</body>
+</html>`;
 }
 
-$('btnPrint').addEventListener('click', () => {
-  const sorted = [...entries].sort((a,b)=>b.amount-a.amount);
-  const tot = entries.reduce((s,e)=>s+e.amount,0);
-  $('printview').innerHTML = `<div style="font-family:'Noto Sans KR',sans-serif;padding:24px">
-    <div style="text-align:center;margin-bottom:20px">
-      <h1 style="font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#7B5B1A">
-        ${W.groom} · ${W.bride} 결혼식 축의금
-      </h1>
-      <p style="font-size:12px;color:#8A7560;margin-top:4px">${W.date} · 총 ${entries.length}명 · ${toWon(tot)}</p>
+/* PRINT */
+function renderPrint(){
+  const sorted=[...entries].sort((a,b)=>b.amount-a.amount);
+  const tot=entries.reduce((s,e)=>s+e.amount,0);
+  /* screen preview (simplified) */
+  $('printPreview').innerHTML=`<div class="pv-wrap">
+    <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#7B5219;border-radius:9px 9px 0 0;color:#fff;margin:-20px -20px 0">
+      <div style="font-family:var(--serif);font-size:16px;font-weight:700">${W.groom} · ${W.bride} 결혼식 축의금</div>
+      <div style="margin-left:auto;font-size:12px;opacity:.8">${W.date}</div>
     </div>
-    <table style="width:100%;border-collapse:collapse;font-size:11px">
-      <thead><tr style="background:#7B5B1A;color:#fff">
-        ${['번호','이름','소속','금액','분류','비고'].map(h=>`<th style="padding:8px;text-align:left;border:1px solid #ccc">${h}</th>`).join('')}
-      </tr></thead>
-      <tbody>${sorted.map((e,i)=>`<tr>
-        <td style="padding:6px 8px;border:1px solid #ddd;color:#8A7560">${i+1}</td>
-        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:700">${e.name}</td>
-        <td style="padding:6px 8px;border:1px solid #ddd;color:#8A7560">${e.org||'-'}</td>
-        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:700;color:#9A6E1A">${toMan(e.amount)}</td>
-        <td style="padding:6px 8px;border:1px solid #ddd;font-size:10px">${e.tags.join(', ')||'-'}</td>
-        <td style="padding:6px 8px;border:1px solid #ddd;font-size:10px;color:#8A7560">${e.note||''}</td>
-      </tr>`).join('')}</tbody>
-    </table>
-    <div style="margin-top:14px;padding:12px;background:#F5EDD8;border-radius:8px;font-size:12px">
-      <strong>합계:</strong> 총 ${entries.length}명 · ${toWon(tot)} · 평균 ${entries.length?toWon(Math.round(tot/entries.length)):'0원'}
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--pale);margin:0 -20px;padding:0">
+      ${[['총 인원',entries.length+'명'],['총 금액',(tot/10000).toLocaleString()+'만원'],['평균',entries.length?Math.round(tot/entries.length/10000).toLocaleString()+'만원':'0']].map(([l,v])=>`<div style="padding:10px 14px;text-align:center;border-right:1px solid var(--border)"><div style="font-family:var(--serif);font-size:15px;font-weight:700;color:var(--gold)">${v}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${l}</div></div>`).join('')}
     </div>
+    <div style="overflow-x:auto;margin-top:16px">
+      <table class="dtbl">
+        <thead><tr><th style="width:28px">#</th><th>이름</th><th>소속</th><th style="text-align:right">금액</th><th>분류</th><th>비고</th></tr></thead>
+        <tbody>${sorted.slice(0,10).map((e,i)=>`<tr><td style="color:var(--muted);text-align:center">${i+1}</td><td style="font-weight:700">${e.name}</td><td style="color:var(--muted)">${e.org||'—'}</td><td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(e.amount)}</td><td style="font-size:11px">${e.tags.join(', ')||'—'}</td><td style="font-size:11px;color:var(--muted)">${e.note||''}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <div style="text-align:center;padding:10px 0;font-size:12px;color:var(--muted)">… 총 ${entries.length}명 전체 목록은 PDF 인쇄 시 출력됩니다</div>
   </div>`;
-  setTimeout(()=>window.print(), 300);
+}
+
+$('btnPrint').addEventListener('click',()=>{
+  const sorted=[...entries].sort((a,b)=>b.amount-a.amount);
+  const tot=entries.reduce((s,e)=>s+e.amount,0);
+  const html=buildA4HTML(sorted,tot);
+  /* open in new window for clean A4 print */
+  const win=window.open('','_print','width=900,height=700');
+  win.document.write(html);
+  win.document.close();
+  win.onload=()=>{win.focus();win.print();};
 });
 
-/* ── EXCEL ──────────────────────────────────────────────────────────────── */
-$('btnXlsx').addEventListener('click', () => {
-  if (!window.XLSX) { notify('라이브러리를 로딩 중입니다. 잠시 후 다시 시도해주세요.', true); return; }
-  const rows = entries.map((e,i)=>({
-    '번호':i+1,'이름':e.name,'소속':e.org||'','금액(원)':e.amount,
-    '금액(만원)':e.amount/10000,'태그':e.tags.join(', '),'비고':e.note||'',
-    '등록시간':new Date(e.createdAt).toLocaleString('ko-KR')
-  }));
-  const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [6,14,16,12,12,18,22,20].map(w=>({wch:w}));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, '축의금 목록');
-  /* summary sheet */
-  const tot = entries.reduce((s,e)=>s+e.amount,0), cnt = entries.length;
-  const sm = [[`${W.groom}·${W.bride} 결혼식 축의금`],[''],
-    ['총 인원',cnt],['총 금액',tot],['평균',cnt?Math.round(tot/cnt):0],[''],[],
-    ['▌ 소속별 현황'],['소속','인원','합계(원)']];
-  const byOrg={};
-  entries.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
-  Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t).forEach(([o,d])=>sm.push([o,d.c,d.t]));
-  sm.push([],['▌ 태그별 현황'],['태그','인원','합계(원)']);
-  const byTag={};
-  entries.forEach(e=>{const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});});
-  Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t).forEach(([t,d])=>sm.push([t,d.c,d.t]));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(sm), '분석');
-  const dt = new Date().toLocaleDateString('ko-KR').replace(/\. /g,'').replace('.','');
-  XLSX.writeFile(wb, `축의금_${W.groom}${W.bride}_${dt}.xlsx`);
+/* ── EXCEL (A4 styled) ─────────────────────────────────────────────── */
+$('btnXlsx').addEventListener('click',()=>{
+  if(!window.XLSX){notify('잠시 후 다시 시도해주세요',true);return;}
+  const sorted=[...entries].sort((a,b)=>b.amount-a.amount);
+  const tot=entries.reduce((s,e)=>s+e.amount,0),cnt=sorted.length;
+
+  /* ── Sheet 1: 목록 ── */
+  const titleRow=[`${W.groom} · ${W.bride} 결혼식 축의금 명단`,'','','','','','',''];
+  const subRow=[`${W.date}    총 ${cnt}명    합계 ${(tot/10000).toLocaleString()}만원    평균 ${cnt?Math.round(tot/cnt/10000).toLocaleString():'0'}만원`,'','','','','','',''];
+  const hdRow=['번호','이름','소속','금액(원)','금액(만원)','분류 태그','비고','등록시간'];
+  const dataRows=sorted.map((e,i)=>[i+1,e.name,e.org||'',e.amount,e.amount/10000,e.tags.join(', '),e.note||'',new Date(e.createdAt).toLocaleString('ko-KR')]);
+  const ws=XLSX.utils.aoa_to_sheet([titleRow,subRow,[],hdRow,...dataRows]);
+  /* column widths (A4 landscape ~42cm usable) */
+  ws['!cols']=[{wch:5},{wch:10},{wch:18},{wch:13},{wch:11},{wch:18},{wch:26},{wch:20}];
+  /* merge title row */
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}}];
+  /* row heights */
+  ws['!rows']=[{hpx:32},{hpx:22},{hpx:8},{hpx:20}];
+  /* print setup: A4 portrait, fit to 1 page wide */
+  ws['!pageSetup']={paperSize:9,orientation:'portrait',fitToWidth:1,fitToHeight:0,fitToPage:true};
+  ws['!margins']={left:0.71,right:0.71,top:1.0,bottom:1.0,header:0.3,footer:0.3};
+  ws['!printOptions']={gridLines:false};
+
+  /* ── Sheet 2: 분석 ── */
+  const byOrg={},byTag={};
+  sorted.forEach(e=>{
+    const o=e.org||'소속없음';byOrg[o]=byOrg[o]||{c:0,t:0};byOrg[o].c++;byOrg[o].t+=e.amount;
+    const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});
+  });
+  const smRows=[
+    [`${W.groom} · ${W.bride} 결혼식 — 분석 요약`,'',''],['','',''],
+    ['항목','값',''],
+    ['총 인원',cnt,'명'],['총 금액',tot,'원'],['평균',cnt?Math.round(tot/cnt):0,'원'],
+    ['','',''],['▌ 소속별 현황','',''],['소속','인원','합계(원)'],
+    ...Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t).map(([o,d])=>[o,d.c,d.t]),
+    ['','',''],['▌ 분류(태그)별 현황','',''],['태그','인원','합계(원)'],
+    ...Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t).map(([t,d])=>[t,d.c,d.t]),
+    ['','',''],['▌ 금액대별 분포','',''],['금액대','인원','합계(원)'],
+    ...BRACKETS.map(b=>({...b,
+      c:sorted.filter(e=>e.amount>=b.min&&e.amount<=b.max).length,
+      t:sorted.filter(e=>e.amount>=b.min&&e.amount<=b.max).reduce((s,e)=>s+e.amount,0)
+    })).filter(b=>b.c>0).map(b=>[b.l,b.c,b.t])
+  ];
+  const ws2=XLSX.utils.aoa_to_sheet(smRows);
+  ws2['!cols']=[{wch:22},{wch:12},{wch:14}];
+  ws2['!merges']=[{s:{r:0,c:0},e:{r:0,c:2}}];
+  ws2['!pageSetup']={paperSize:9,orientation:'portrait',fitToWidth:1,fitToPage:true};
+
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'축의금 명단');
+  XLSX.utils.book_append_sheet(wb,ws2,'분석');
+  const dt=new Date().toLocaleDateString('ko-KR').replace(/\. /g,'').replace('.','');
+  XLSX.writeFile(wb,`축의금_${W.groom}${W.bride}_${dt}.xlsx`);
   notify('엑셀 파일 다운로드 완료');
 });
 
-/* ── GITHUB GIST ─────────────────────────────────────────────────────────── */
-$('btnNewGist').addEventListener('click', async () => {
-  const tok = $('sGhTok').value.trim();
-  if (!tok) { notify('GitHub Token을 입력해주세요', true); return; }
-  try {
-    const r = await fetch('https://api.github.com/gists', {
-      method:'POST',
+/* GITHUB */
+$('btnNewGist').addEventListener('click',async()=>{
+  const tok=$('sGhTok').value.trim();
+  if(!tok){notify('GitHub Token을 입력해주세요',true);return;}
+  try{
+    const r=await fetch('https://api.github.com/gists',{method:'POST',
       headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},
-      body: JSON.stringify({
-        description:`${W.groom}·${W.bride} 결혼식 축의금`,
-        public:false,
-        files:{'wedding-gift-data.json':{content:JSON.stringify([],null,2)}}
-      })
-    });
-    const d = await r.json();
-    if (d.id) { $('sGistId').value=d.id; notify('Gist 생성 완료 — ID: '+d.id); }
-    else notify('생성 실패: '+r.status, true);
-  } catch { notify('GitHub 연결 실패', true); }
+      body:JSON.stringify({description:`${W.groom}·${W.bride} 결혼식 축의금`,public:false,
+        files:{'wedding-gift-data.json':{content:JSON.stringify([],null,2)}}})});
+    const d=await r.json();
+    if(d.id){$('sGistId').value=d.id;notify('Gist 생성 완료: '+d.id);}
+    else notify('생성 실패 '+r.status,true);
+  }catch{notify('GitHub 연결 실패',true);}
 });
-$('btnSaveGist').addEventListener('click', async () => {
-  const tok=$('sGhTok').value.trim(), gid=$('sGistId').value.trim();
-  if (!tok||!gid) { notify('Token과 Gist ID를 입력해주세요', true); return; }
-  try {
-    const r = await fetch(`https://api.github.com/gists/${gid}`, {
-      method:'PATCH',
+$('btnSaveGist').addEventListener('click',async()=>{
+  const tok=$('sGhTok').value.trim(),gid=$('sGistId').value.trim();
+  if(!tok||!gid){notify('Token과 Gist ID를 입력해주세요',true);return;}
+  try{
+    const r=await fetch(`https://api.github.com/gists/${gid}`,{method:'PATCH',
       headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},
-      body: JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})
-    });
-    notify(r.ok ? '✓ GitHub에 저장되었습니다' : 'GitHub 저장 실패', !r.ok);
-  } catch { notify('GitHub 연결 실패', true); }
+      body:JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})});
+    notify(r.ok?'✓ GitHub 저장 완료':'GitHub 저장 실패',!r.ok);
+  }catch{notify('GitHub 연결 실패',true);}
 });
-$('btnLoadGist').addEventListener('click', async () => {
-  const tok=$('sGhTok').value.trim(), gid=$('sGistId').value.trim();
-  if (!tok||!gid) { notify('Token과 Gist ID를 입력해주세요', true); return; }
-  try {
-    const r = await fetch(`https://api.github.com/gists/${gid}`, {
-      headers:{'Authorization':`token ${tok}`}
-    });
-    const d = await r.json();
-    const content = d.files?.['wedding-gift-data.json']?.content;
-    if (content) {
-      entries = JSON.parse(content); persist(); refreshAll();
-      notify(`✓ ${entries.length}건을 불러왔습니다`);
-    } else notify('데이터 없음', true);
-  } catch { notify('불러오기 실패', true); }
+$('btnLoadGist').addEventListener('click',async()=>{
+  const tok=$('sGhTok').value.trim(),gid=$('sGistId').value.trim();
+  if(!tok||!gid){notify('Token과 Gist ID를 입력해주세요',true);return;}
+  try{
+    const r=await fetch(`https://api.github.com/gists/${gid}`,{headers:{'Authorization':`token ${tok}`}});
+    const d=await r.json();
+    const c=d.files?.['wedding-gift-data.json']?.content;
+    if(c){entries=JSON.parse(c);persist();refreshAll();notify(`✓ ${entries.length}건 불러왔습니다`);}
+    else notify('데이터 없음',true);
+  }catch{notify('불러오기 실패',true);}
 });
 
-/* ── GOOGLE SHEETS ──────────────────────────────────────────────────────── */
-$('btnCopy').addEventListener('click', () => {
-  navigator.clipboard.writeText(SCRIPT).then(()=>notify('✓ 코드가 복사되었습니다'));
-});
-$('btnSyncNow').addEventListener('click', () => syncSheets());
-async function syncSheets(data) {
-  const url = $('sSheetsUrl').value.trim() || settings.sheetsUrl;
-  if (!url) { notify('Sheets URL을 입력해주세요', true); return; }
-  try {
-    await fetch(url, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+/* SHEETS */
+$('btnCopy').addEventListener('click',()=>navigator.clipboard.writeText(SCRIPT).then(()=>notify('✓ 코드 복사 완료')));
+$('btnSyncNow').addEventListener('click',()=>syncSheets());
+async function syncSheets(data){
+  const url=$('sSheetsUrl').value.trim()||settings.sheetsUrl;
+  if(!url){notify('Sheets URL을 입력해주세요',true);return;}
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({action:'sync',data:data||entries})});
-    notify('✓ 구글 시트에 동기화되었습니다');
-  } catch { notify('Sheets 연결 실패', true); }
+    notify('✓ 구글 시트 동기화 완료');
+  }catch{notify('Sheets 연결 실패',true);}
 }
 
-/* ── SETTINGS SAVE ──────────────────────────────────────────────────────── */
-$('btnSave').addEventListener('click', () => {
-  settings = {ghToken:$('sGhTok').value.trim(), gistId:$('sGistId').value.trim(),
-    sheetsUrl:$('sSheetsUrl').value.trim(), customTags:$('sCustomTags').value.trim()};
-  localStorage.setItem('wgSettings', JSON.stringify(settings));
-  buildTags([]); notify('✓ 설정이 저장되었습니다');
+/* SETTINGS */
+$('btnSave').addEventListener('click',()=>{
+  settings={ghToken:$('sGhTok').value.trim(),gistId:$('sGistId').value.trim(),
+    sheetsUrl:$('sSheetsUrl').value.trim()||SHEETS_URL,customTags:$('sCustomTags').value.trim()};
+  localStorage.setItem('wgSettings',JSON.stringify(settings));
+  buildTags([]);notify('✓ 설정 저장 완료');
 });
-$('btnClear').addEventListener('click', () => {
-  if (!confirm(`전체 ${entries.length}건을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
-  entries=[]; persist(); refreshAll(); notify('초기화 완료');
+$('btnClear').addEventListener('click',()=>{
+  if(!confirm(`전체 ${entries.length}건을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`))return;
+  entries=[];persist();refreshAll();notify('초기화 완료');
 });
-$('btnJsonBackup').addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `wg_backup_${new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')}.json`;
-  a.click(); notify('JSON 백업 다운로드');
+$('btnJsonBackup').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`wg_backup_${new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')}.json`;
+  a.click();notify('JSON 백업 다운로드');
 });
 
-/* ── AUTO SYNC ──────────────────────────────────────────────────────────── */
-function autoSync() {
-  if (settings.ghToken && settings.gistId) {
-    fetch(`https://api.github.com/gists/${settings.gistId}`, {
-      method:'PATCH',
+/* AUTO SYNC */
+function autoSync(){
+  if(settings.ghToken&&settings.gistId){
+    fetch(`https://api.github.com/gists/${settings.gistId}`,{method:'PATCH',
       headers:{'Authorization':`token ${settings.ghToken}`,'Content-Type':'application/json'},
-      body: JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})
-    }).then(r=>{ if(r.ok) showSync('GitHub ✓'); }).catch(()=>{});
+      body:JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})
+    }).then(r=>{if(r.ok)showSync('GitHub ✓');}).catch(()=>{});
   }
-  if (settings.sheetsUrl) {
-    fetch(settings.sheetsUrl, {method:'POST',mode:'no-cors',
+  if(settings.sheetsUrl){
+    fetch(settings.sheetsUrl,{method:'POST',mode:'no-cors',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({action:'sync',data:entries})}).catch(()=>{});
   }
