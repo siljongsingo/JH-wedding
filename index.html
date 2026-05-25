@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>이준환 · 최희수 결혼식 축의금 관리</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#9A6E1A;--gold2:#C49A3C;--pale:#F5EDD8;--paleb:#FBF7EE;
+  --bg:#FAF7F2;--card:#FFFFFF;--text:#2C2416;--muted:#8A7560;
+  --border:#E2D4BE;--err:#B5341E;--ok:#4A7C59;
+  --font:'Noto Sans KR',sans-serif;--serif:'Noto Serif KR',serif;
+  --radius:12px;--radius-sm:8px;
+}
+html{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse at 50% 0%,var(--pale) 0%,var(--bg) 55%)}
+.lcard{background:var(--card);border-radius:20px;padding:44px 36px;width:100%;max-width:360px;
+  box-shadow:0 8px 40px rgba(123,91,26,.12);text-align:center}
+.lheart{font-size:36px;color:var(--gold);margin-bottom:10px}
+.ltitle{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:5px}
+.ldate{font-size:13px;color:var(--muted);margin-bottom:28px}
+.ldivider{width:36px;height:2px;background:var(--pale);margin:0 auto 22px}
+.llbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:8px;text-align:left}
+.lpw{width:100%;padding:14px;font-size:24px;letter-spacing:14px;text-align:center;
+  border:2px solid var(--border);border-radius:10px;background:var(--paleb);
+  font-family:var(--font);color:var(--text);outline:none;transition:.2s}
+.lpw:focus{border-color:var(--gold);background:#fff}
+.lpw.err{border-color:var(--err)}
+.lerr{color:var(--err);font-size:12px;margin-top:7px;min-height:16px}
+.lbtn{margin-top:16px;width:100%;padding:14px;background:var(--gold);color:#fff;border:none;
+  border-radius:10px;font-size:16px;font-family:var(--font);font-weight:700;cursor:pointer;letter-spacing:2px;transition:.2s}
+.lbtn:hover{background:var(--gold2)}
+.lhint{font-size:11px;color:var(--muted);margin-top:14px}
+/* ── APP SHELL ── */
+#app{display:none;flex-direction:column;min-height:100vh}
+.ahdr{background:var(--gold);color:#fff;padding:13px 16px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100}
+.htitle{font-family:var(--serif);font-size:16px;font-weight:700}
+.hsub{font-size:11px;opacity:.75;margin-top:1px}
+.hright{text-align:right;font-size:11px}
+.hstat{opacity:.85;margin-top:2px}
+.hsync{display:inline-block;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;margin-bottom:2px}
+.tabbar{display:flex;background:var(--card);border-bottom:1px solid var(--border);
+  position:sticky;top:57px;z-index:99}
+.tbtn{flex:1;padding:10px 2px;border:none;background:none;cursor:pointer;
+  font-family:var(--font);font-size:10px;color:var(--muted);
+  border-bottom:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:.15s}
+.tbtn.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+.ticon{font-size:18px}
+.content{flex:1;padding:14px}
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(123,91,26,.06)}
+.ctitle{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--gold);margin-bottom:15px;
+  display:flex;align-items:center;gap:6px}
+/* ── FORM ── */
+.frow{margin-bottom:13px;position:relative}
+.flbl{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:5px}
+.fin{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:14px;font-family:var(--font);color:var(--text);background:#fff;outline:none;transition:.15s}
+.fin:focus{border-color:var(--gold)}
+.aprev{font-size:12px;color:var(--gold);font-weight:700;margin-top:4px;min-height:16px}
+.prerow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.prebtn{padding:5px 10px;background:var(--paleb);border:1.5px solid var(--pale);border-radius:20px;
+  font-size:12px;color:var(--gold);cursor:pointer;font-family:var(--font);font-weight:500;transition:.1s}
+.prebtn:hover{background:var(--pale)}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.tbtnx{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:transparent;
+  color:var(--muted);font-size:12px;cursor:pointer;font-family:var(--font);transition:.1s}
+.tbtnx.on{background:var(--pale);border-color:var(--gold2);color:var(--gold);font-weight:700}
+.subbtn{width:100%;padding:14px;background:var(--gold);color:#fff;border:none;
+  border-radius:10px;font-size:15px;font-family:var(--font);font-weight:700;cursor:pointer;letter-spacing:1px;transition:.2s;margin-top:4px}
+.subbtn:hover{background:var(--gold2)}
+.canbtn{width:100%;padding:11px;background:transparent;color:var(--muted);border:1.5px solid var(--border);
+  border-radius:10px;font-size:13px;font-family:var(--font);cursor:pointer;margin-top:8px}
+/* ── AUTOCOMPLETE ── */
+.aclist{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--gold2);
+  border-top:none;border-radius:0 0 9px 9px;z-index:50;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.acitem{padding:9px 13px;font-size:13px;cursor:pointer;color:var(--text)}
+.acitem:hover{background:var(--paleb)}
+/* ── SUMMARY BAR ── */
+.sumbar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:13px}
+.schip{border-radius:10px;padding:11px 8px;text-align:center;color:#fff}
+.scval{font-family:var(--serif);font-size:16px;font-weight:700}
+.sclbl{font-size:10px;opacity:.85;margin-top:2px}
+/* ── SEARCH ── */
+.srow{display:flex;gap:7px;margin-bottom:10px}
+.sinp{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:13px;font-family:var(--font);color:var(--text);background:#fff;outline:none}
+.sinp:focus{border-color:var(--gold)}
+.ssel{border:1.5px solid var(--border);border-radius:9px;padding:10px 7px;
+  font-size:12px;font-family:var(--font);background:#fff;color:var(--text);outline:none}
+/* ── ENTRY CARD ── */
+.ecard{background:var(--card);border:1px solid var(--border);border-radius:9px;
+  padding:12px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;
+  box-shadow:0 1px 5px rgba(123,91,26,.04)}
+.enum{font-size:10px;color:var(--gold);background:var(--pale);border-radius:6px;
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.emain{flex:1;min-width:0}
+.ename{font-weight:700;font-size:14px}
+.eorg{font-size:12px;color:var(--muted);margin-top:1px}
+.etags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.etag{font-size:10px;background:var(--pale);color:var(--gold);padding:2px 7px;border-radius:20px}
+.enote{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic}
+.ebtns{display:flex;gap:5px;margin-top:6px}
+.eebtn{padding:4px 9px;border-radius:6px;font-size:11px;cursor:pointer;font-family:var(--font);border:1px solid}
+.eebtn.ed{background:var(--paleb);color:var(--gold);border-color:var(--pale)}
+.eebtn.dl{background:#FFF5F3;color:var(--err);border-color:#F5C9C3}
+.eamt{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold)}
+.eamt2{font-size:10px;color:var(--muted)}
+/* ── ANALYTICS ── */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
+.sbox{background:var(--card);border:1px solid var(--border);border-radius:9px;
+  padding:13px;text-align:center}
+.sval{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--gold)}
+.slbl{font-size:11px;color:var(--muted);margin-top:2px}
+.dtbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.dtbl th{background:var(--gold);color:#fff;padding:8px 10px;text-align:left;font-weight:500;font-size:11px}
+.dtbl td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:var(--paleb)}
+.bw{background:var(--border);border-radius:3px;height:4px;margin-top:3px;overflow:hidden}
+.bf{height:100%;background:var(--gold2);border-radius:3px;transition:width .5s}
+/* ── SETTINGS ── */
+.ssec{margin-bottom:18px}
+.stitle{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px;
+  padding-bottom:7px;border-bottom:1px solid var(--border)}
+.codeblk{background:#1a1a2e;color:#E8D5A3;font-family:monospace;font-size:10px;
+  padding:12px;border-radius:9px;overflow-x:auto;white-space:pre;line-height:1.5;
+  max-height:160px;overflow-y:auto}
+.copybtn{background:var(--paleb);color:var(--gold);border:1.5px solid var(--pale);
+  border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;margin-top:6px;font-family:var(--font)}
+.arow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.abtn{padding:8px 13px;border:1.5px solid var(--border);border-radius:9px;
+  background:#fff;font-size:12px;cursor:pointer;font-family:var(--font);color:var(--text);transition:.15s}
+.abtn:hover{border-color:var(--gold);color:var(--gold)}
+.abtn.pri{background:var(--gold);color:#fff;border-color:var(--gold)}
+.abtn.pri:hover{background:var(--gold2)}
+.abtn.dng{background:#FFF5F3;color:var(--err);border-color:#F5C9C3}
+.hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
+/* ── PRINT TAB ── */
+.xbtn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;
+  font-family:var(--font);font-weight:700;cursor:pointer;margin-bottom:10px;transition:.2s}
+.xbtn.xl{background:#1D6F42;color:#fff}
+.xbtn.xl:hover{background:#165c35}
+.xbtn.pt{background:var(--gold);color:#fff}
+.xbtn.pt:hover{background:var(--gold2)}
+/* ── NOTIFICATION ── */
+#notif{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:#fff;padding:10px 22px;border-radius:30px;
+  font-size:13px;font-family:var(--font);z-index:9999;display:none;
+  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);
+  animation:slide-up .25s ease;pointer-events:none}
+@keyframes slide-up{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.notif-err{background:var(--err)!important}
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:36px 0;color:var(--muted);font-size:13px}
+/* ── PRINT STYLES ── */
+@media print{
+  body{background:#fff}
+  .ahdr,.tabbar,.content,.noPrint{display:none!important}
+  #printview{display:block!important;padding:20px}
+  #printview table{width:100%;border-collapse:collapse;font-size:11px}
+  #printview th{background:#7B5B1A!important;color:#fff!important;padding:7px 9px;
+    border:1px solid #ccc;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #printview td{padding:6px 9px;border:1px solid #ddd}
+  #printview .phdr{text-align:center;margin-bottom:16px}
+  #printview .phdr h1{font-family:var(--serif);font-size:18px;font-weight:700;color:#7B5B1A}
+  #printview .psum{margin-top:14px;padding:10px 14px;background:#F5EDD8;border-radius:6px;font-size:12px}
+}
+#printview{display:none}
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .lcard{padding:36px 24px}
+  .content{padding:11px}
+  .card{padding:15px}
+  .sumbar .scval{font-size:14px}
+}
+@media(min-width:600px){
+  .content,.lcard{max-width:560px;margin-left:auto;margin-right:auto}
+  .ahdr,.tabbar{justify-content:center}
+  .ahdr>*,.tabbar>*{max-width:560px}
+  .ahdr{flex-direction:row;justify-content:space-between}
+}
+@media(min-width:900px){
+  .content,.lcard{max-width:700px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen">
+  <div class="lcard">
+    <div class="lheart">💍</div>
+    <div class="ltitle">이준환 · 최희수</div>
+    <div class="ldate">2026년 5월 31일 결혼식 축의금 관리</div>
+    <div class="ldivider"></div>
+    <div class="llbl">비밀번호 입력</div>
+    <input class="lpw" id="pw" type="password" placeholder="••••" maxlength="8" inputmode="numeric">
+    <div class="lerr" id="pwErr"></div>
+    <button class="lbtn" id="loginBtn">입 장</button>
+    <div class="lhint">초기 비밀번호: 0914</div>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+  <header class="ahdr">
+    <div>
+      <div class="htitle">💍 이준환 · 최희수</div>
+      <div class="hsub">2026년 5월 31일 결혼식 축의금</div>
+    </div>
+    <div class="hright">
+      <div id="syncBadge" class="hsync" style="display:none"></div>
+      <div class="hstat" id="hStat">0명 · 0원</div>
+    </div>
+  </header>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tbtn on" data-t="entry"><i class="ti ti-pencil ticon"></i>입력</button>
+    <button class="tbtn" data-t="list"><i class="ti ti-list ticon"></i>목록</button>
+    <button class="tbtn" data-t="analytics"><i class="ti ti-chart-bar ticon"></i>분석</button>
+    <button class="tbtn" data-t="settings"><i class="ti ti-settings ticon"></i>설정</button>
+    <button class="tbtn" data-t="print"><i class="ti ti-printer ticon"></i>인쇄</button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ENTRY -->
+    <div id="tab-entry">
+      <div class="card">
+        <div class="ctitle" id="formTitle"><i class="ti ti-pencil"></i> 축의금 입력</div>
+        <div class="frow">
+          <div class="flbl">이름 *</div>
+          <input class="fin" id="fName" placeholder="홍길동">
+        </div>
+        <div class="frow">
+          <div class="flbl">소속</div>
+          <input class="fin" id="fOrg" placeholder="회사 / 학교 / 가족" autocomplete="off">
+          <div class="aclist" id="acList"></div>
+        </div>
+        <div class="frow">
+          <div class="flbl">금액 * (만원 단위 입력)</div>
+          <input class="fin" id="fAmt" type="number" placeholder="예: 5 → 50,000원"
+            style="font-size:20px;font-weight:700" inputmode="numeric">
+          <div class="aprev" id="amtPrev"></div>
+          <div class="prerow" id="preRow"></div>
+        </div>
+        <div class="frow">
+          <div class="flbl">분류 태그</div>
+          <div class="tagrow" id="tagRow"></div>
+        </div>
+        <div class="frow">
+          <div class="flbl">비고</div>
+          <input class="fin" id="fNote" placeholder="메모 사항">
+        </div>
+        <button class="subbtn" id="subBtn">등록하기</button>
+        <button class="canbtn" id="canBtn" style="display:none">취소</button>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div id="tab-list" style="display:none">
+      <div class="sumbar">
+        <div class="schip" style="background:var(--gold)"><div class="scval" id="sTotCnt">0</div><div class="sclbl">총 인원</div></div>
+        <div class="schip" style="background:var(--gold2)"><div class="scval" id="sTotAmt">0</div><div class="sclbl">총 금액</div></div>
+        <div class="schip" style="background:#8B8070"><div class="scval" id="sAvg">0</div><div class="sclbl">평균</div></div>
+      </div>
+      <div class="srow">
+        <input class="sinp" id="searchInp" placeholder="🔍 이름·소속·메모 검색">
+        <select class="ssel" id="sortSel">
+          <option value="time">최근순</option>
+          <option value="amount">금액순</option>
+          <option value="name">이름순</option>
+        </select>
+      </div>
+      <div class="tagrow" id="filterTagRow" style="margin-bottom:10px"></div>
+      <div id="entryList"></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="tab-analytics" style="display:none">
+      <div class="sgrid">
+        <div class="sbox"><div class="sval" id="aTotal">0</div><div class="slbl">총 금액</div></div>
+        <div class="sbox"><div class="sval" id="aCnt">0</div><div class="slbl">총 인원</div></div>
+        <div class="sbox"><div class="sval" id="aAvg">0</div><div class="slbl">평균 금액</div></div>
+        <div class="sbox"><div class="sval" id="aMax">0</div><div class="slbl">최고 금액</div></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><i class="ti ti-building"></i> 소속별 현황</div>
+        <div id="aOrg"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><i class="ti ti-tag"></i> 분류(태그)별 현황</div>
+        <div id="aTag"></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><i class="ti ti-coins"></i> 금액대별 분포</div>
+        <div id="aBkt"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-settings" style="display:none">
+      <div class="card">
+        <div class="ctitle"><i class="ti ti-settings"></i> 연동 설정</div>
+
+        <div class="ssec">
+          <div class="stitle"><i class="ti ti-brand-github"></i> GitHub Gist 저장 (선택)</div>
+          <div class="frow"><div class="flbl">GitHub Personal Access Token</div>
+            <input class="fin" id="sGhTok" type="password" placeholder="ghp_xxxxxxxxxxxx"></div>
+          <div class="frow"><div class="flbl">Gist ID (생성 후 자동 입력됩니다)</div>
+            <input class="fin" id="sGistId" placeholder="Gist 생성 버튼 클릭"></div>
+          <div class="arow">
+            <button class="abtn" id="btnNewGist">새 Gist 생성</button>
+            <button class="abtn" id="btnSaveGist">저장</button>
+            <button class="abtn" id="btnLoadGist">불러오기</button>
+          </div>
+          <div class="hint">
+            github.com → Settings → Developer settings →<br>
+            Personal access tokens → <strong>gist 권한</strong>으로 토큰 생성
+          </div>
+        </div>
+
+        <div class="ssec">
+          <div class="stitle"><i class="ti ti-table"></i> Google Sheets 연동 (선택)</div>
+          <div class="hint" style="margin-bottom:9px">
+            아래 코드를 구글 시트 Apps Script에 배포하면,<br>
+            입력할 때마다 구글 시트에 자동 저장됩니다.
+          </div>
+          <div class="codeblk" id="scriptCode"></div>
+          <button class="copybtn" id="btnCopy"><i class="ti ti-copy"></i> 코드 복사</button>
+          <div class="frow" style="margin-top:12px">
+            <div class="flbl">배포 URL (Web App URL)</div>
+            <input class="fin" id="sSheetsUrl" placeholder="https://script.google.com/macros/s/...">
+          </div>
+          <div class="arow">
+            <button class="abtn" id="btnSyncNow">지금 동기화</button>
+          </div>
+        </div>
+
+        <div class="ssec">
+          <div class="stitle"><i class="ti ti-tags"></i> 커스텀 태그 추가</div>
+          <input class="fin" id="sCustomTags" placeholder="이자영, 대학친구, 동네이웃 (쉼표로 구분)">
+          <div class="hint">기본 태그(가족·친척·친구·교회·직장·학교·이웃)에 추가됩니다</div>
+        </div>
+
+        <button class="subbtn" id="btnSave">설정 저장</button>
+
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="stitle" style="color:var(--err)"><i class="ti ti-alert-triangle"></i> 데이터 관리</div>
+          <div class="arow">
+            <button class="abtn dng" id="btnClear">전체 초기화</button>
+            <button class="abtn" id="btnJsonBackup">JSON 백업</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRINT -->
+    <div id="tab-print" style="display:none">
+      <button class="xbtn xl" id="btnXlsx"><i class="ti ti-file-spreadsheet"></i> 엑셀(.xlsx) 다운로드</button>
+      <button class="xbtn pt" id="btnPrint"><i class="ti ti-printer"></i> PDF 인쇄 / 저장</button>
+      <div class="card" id="printPreview"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Notification -->
+<div id="notif"></div>
+
+<!-- Print-only view -->
+<div id="printview"></div>
+
+<!-- SheetJS for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ── CONSTANTS ─────────────────────────────────────────────────────────── */
+const W = {groom:'이준환', bride:'최희수', date:'2026년 5월 31일'};
+const PW = '0914';
+const P_TAGS = ['가족','친척','친구','교회','직장','학교','이웃'];
+const P_AMTS = [3,5,7,10,15,20,30,50];
+const BRACKETS = [
+  {l:'3만원 이하',  min:0,      max:39999},
+  {l:'5만원',       min:40000,  max:69999},
+  {l:'7만원',       min:70000,  max:99999},
+  {l:'10만원',      min:100000, max:119999},
+  {l:'15만원',      min:120000, max:199999},
+  {l:'20만원',      min:200000, max:249999},
+  {l:'30만원 이상', min:250000, max:Infinity},
+];
+const SCRIPT = `// 구글 시트 > 확장 프로그램 > Apps Script > 코드 붙여넣기
+// 배포 > 새 배포 > 웹 앱 > "모든 사용자"로 실행 > 배포 후 URL 복사
+
+function doPost(e) {
+  try {
+    const d = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sh = ss.getSheetByName('축의금') || ss.insertSheet('축의금');
+    sh.clearContents();
+    sh.appendRow(['번호','이름','소속','금액(원)','금액(만원)','태그','비고','등록시간']);
+    d.data.forEach((r,i) => sh.appendRow([
+      i+1, r.name, r.org||'', r.amount, r.amount/10000,
+      (r.tags||[]).join(', '), r.note||'',
+      new Date(r.createdAt).toLocaleString('ko-KR')
+    ]));
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:true}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:false,msg:err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+
+/* ── STATE ─────────────────────────────────────────────────────────────── */
+let entries = [], settings = {ghToken:'',gistId:'',sheetsUrl:'https://script.google.com/macros/s/AKfycbwENF0KMEGEv2pADhSUa7eRYRIZLhrOhxY-GtvyylogI9Ce2M-xlG3UGD8QvmYWIjI/exec',customTags:''};
+let editId = null, filterTag = '';
+
+/* ── UTILS ─────────────────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const toWon = n => n.toLocaleString('ko-KR') + '원';
+const toMan = n => (n/10000).toLocaleString('ko-KR') + '만원';
+const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+const allTags = () => {
+  const ct = settings.customTags ? settings.customTags.split(',').map(t=>t.trim()).filter(Boolean) : [];
+  return [...new Set([...P_TAGS, ...entries.flatMap(e=>e.tags), ...ct])];
+};
+const orgs = () => [...new Set(entries.map(e=>e.org).filter(Boolean))];
+
+/* ── PERSIST ────────────────────────────────────────────────────────────── */
+function persist() { localStorage.setItem('wgData', JSON.stringify(entries)); }
+function loadData() {
+  try { entries = JSON.parse(localStorage.getItem('wgData') || '[]'); } catch{}
+  try { settings = {...settings, ...JSON.parse(localStorage.getItem('wgSettings') || '{}')}; } catch{}
+}
+
+/* ── NOTIFY ─────────────────────────────────────────────────────────────── */
+let _nt;
+function notify(msg, isErr=false) {
+  const el = $('notif');
+  el.textContent = msg;
+  el.className = isErr ? 'notif-err' : '';
+  el.style.display = 'block';
+  clearTimeout(_nt);
+  _nt = setTimeout(() => el.style.display='none', 3000);
+}
+function showSync(msg) {
+  const b = $('syncBadge'); b.textContent = msg; b.style.display='inline-block';
+  setTimeout(()=>b.style.display='none', 4000);
+}
+
+/* ── LOGIN ──────────────────────────────────────────────────────────────── */
+function doLogin() {
+  if ($('pw').value === PW) {
+    $('loginScreen').style.display = 'none';
+    $('app').style.display = 'flex';
+    $('app').style.flexDirection = 'column';
+    initApp();
+  } else {
+    $('pwErr').textContent = '비밀번호가 올바르지 않습니다';
+    $('pw').value = ''; $('pw').focus();
+    $('pw').classList.add('err');
+    setTimeout(()=>$('pw').classList.remove('err'),1500);
+  }
+}
+$('pw').addEventListener('keydown', e => e.key==='Enter' && doLogin());
+$('loginBtn').addEventListener('click', doLogin);
+
+/* ── INIT ───────────────────────────────────────────────────────────────── */
+function initApp() {
+  loadData();
+  $('sGhTok').value = settings.ghToken || '';
+  $('sGistId').value = settings.gistId || '';
+  $('sSheetsUrl').value = settings.sheetsUrl || '';
+  $('sCustomTags').value = settings.customTags || '';
+  $('scriptCode').textContent = SCRIPT;
+  buildPresets(); buildTags([]); refreshAll();
+}
+
+/* ── TABS ───────────────────────────────────────────────────────────────── */
+document.querySelectorAll('.tbtn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
+function switchTab(id) {
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on', b.dataset.t===id));
+  ['entry','list','analytics','settings','print'].forEach(t =>
+    $('tab-'+t).style.display = t===id ? 'block':'none'
+  );
+  if (id==='list') renderList();
+  if (id==='analytics') renderAnalytics();
+  if (id==='print') renderPrint();
+}
+
+/* ── FORM ───────────────────────────────────────────────────────────────── */
+function buildPresets() {
+  $('preRow').innerHTML = P_AMTS.map(n =>
+    `<button class="prebtn" onclick="setAmt(${n})">${n}만원</button>`
+  ).join('');
+}
+window.setAmt = n => { $('fAmt').value = n; updatePrev(); };
+
+$('fAmt').addEventListener('input', updatePrev);
+function updatePrev() {
+  const v = parseFloat($('fAmt').value);
+  $('amtPrev').textContent = isNaN(v)||v<=0 ? '' : `→ ${Math.round(v*10000).toLocaleString('ko-KR')}원`;
+}
+
+function buildTags(selected=[]) {
+  $('tagRow').innerHTML = allTags().map(t =>
+    `<button class="tbtnx${selected.includes(t)?' on':''}" onclick="toggleTag(this)">${t}</button>`
+  ).join('');
+}
+window.toggleTag = btn => btn.classList.toggle('on');
+const selectedTags = () => [...$('tagRow').querySelectorAll('.tbtnx.on')].map(b=>b.textContent);
+
+/* org autocomplete */
+$('fOrg').addEventListener('input', () => {
+  const q = $('fOrg').value.toLowerCase().trim();
+  const list = $('acList');
+  if (!q) { list.style.display='none'; return; }
+  const m = orgs().filter(o=>o.toLowerCase().includes(q)&&o.toLowerCase()!==q).slice(0,5);
+  if (!m.length) { list.style.display='none'; return; }
+  list.innerHTML = m.map(o=>`<div class="acitem" onmousedown="pickOrg('${o}')">${o}</div>`).join('');
+  list.style.display='block';
+});
+$('fOrg').addEventListener('blur', ()=>setTimeout(()=>$('acList').style.display='none',200));
+window.pickOrg = v => { $('fOrg').value=v; $('acList').style.display='none'; };
+
+$('subBtn').addEventListener('click', submitEntry);
+$('canBtn').addEventListener('click', cancelEdit);
+
+function submitEntry() {
+  const name = $('fName').value.trim();
+  const amtRaw = parseFloat($('fAmt').value);
+  if (!name||isNaN(amtRaw)||amtRaw<=0) { notify('이름과 금액은 필수입니다',true); return; }
+  const entry = {
+    id: editId||genId(), name,
+    org: $('fOrg').value.trim(),
+    amount: Math.round(amtRaw*10000),
+    note: $('fNote').value.trim(),
+    tags: selectedTags(),
+    createdAt: editId ? entries.find(e=>e.id===editId)?.createdAt : new Date().toISOString()
+  };
+  entries = editId ? entries.map(e=>e.id===editId?entry:e) : [...entries, entry];
+  persist(); autoSync();
+  notify(editId ? `${name}님 수정 완료` : `${name}님 등록 완료 (${toMan(entry.amount)})`);
+  resetForm(); refreshAll();
+}
+
+function resetForm() {
+  ['fName','fOrg','fAmt','fNote'].forEach(id=>$(id).value='');
+  $('amtPrev').textContent=''; editId=null;
+  $('formTitle').innerHTML='<i class="ti ti-pencil"></i> 축의금 입력';
+  $('subBtn').textContent='등록하기'; $('canBtn').style.display='none';
+  buildTags([]);
+}
+function cancelEdit() { editId=null; resetForm(); }
+
+window.editEntry = id => {
+  const e = entries.find(x=>x.id===id); if(!e) return;
+  editId=id; $('fName').value=e.name; $('fOrg').value=e.org;
+  $('fAmt').value=e.amount/10000; $('fNote').value=e.note;
+  updatePrev(); buildTags(e.tags);
+  $('formTitle').innerHTML='<i class="ti ti-pencil"></i> 수정 중';
+  $('subBtn').textContent='수정 완료'; $('canBtn').style.display='block';
+  switchTab('entry'); window.scrollTo(0,0);
+};
+window.deleteEntry = id => {
+  if(!confirm('삭제하시겠습니까?')) return;
+  entries = entries.filter(e=>e.id!==id);
+  persist(); autoSync(); refreshAll(); notify('삭제되었습니다');
+};
+
+/* ── REFRESH ALL ────────────────────────────────────────────────────────── */
+function refreshAll() {
+  const tot = entries.reduce((s,e)=>s+e.amount,0);
+  const cnt = entries.length;
+  $('hStat').textContent = `${cnt}명 · ${toMan(tot)}`;
+  $('sTotCnt').textContent = cnt+'명';
+  $('sTotAmt').textContent = toMan(tot);
+  $('sAvg').textContent = cnt ? toMan(Math.round(tot/cnt)) : '0';
+  buildFilterTags();
+}
+
+/* ── LIST ───────────────────────────────────────────────────────────────── */
+$('searchInp').addEventListener('input', renderList);
+$('sortSel').addEventListener('change', renderList);
+
+function buildFilterTags() {
+  const used = [...new Set(entries.flatMap(e=>e.tags))];
+  $('filterTagRow').innerHTML =
+    `<button class="tbtnx${!filterTag?' on':''}" onclick="setFilter('')">전체</button>` +
+    used.map(t=>`<button class="tbtnx${filterTag===t?' on':''}" onclick="setFilter('${t}')">${t}</button>`).join('');
+}
+window.setFilter = t => { filterTag=t; buildFilterTags(); renderList(); };
+
+function renderList() {
+  const q = ($('searchInp').value||'').toLowerCase();
+  const sort = $('sortSel').value;
+  const idxMap = {}; entries.forEach((e,i)=>idxMap[e.id]=i+1);
+  let list = entries.filter(e=>{
+    const mq = !q||[e.name,e.org,e.note,...e.tags].some(v=>v?.toLowerCase().includes(q));
+    const mt = !filterTag||e.tags.includes(filterTag);
+    return mq&&mt;
+  }).sort((a,b)=>{
+    if(sort==='amount') return b.amount-a.amount;
+    if(sort==='name') return a.name.localeCompare(b.name,'ko');
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  });
+  const filtTot = list.reduce((s,e)=>s+e.amount,0);
+  $('entryList').innerHTML = list.length===0
+    ? `<div class="empty"><i class="ti ti-inbox" style="font-size:32px;display:block;margin-bottom:8px"></i>데이터가 없습니다</div>`
+    : list.map(e=>`
+      <div class="ecard">
+        <div class="enum">${idxMap[e.id]}</div>
+        <div class="emain">
+          <div class="ename">${e.name}</div>
+          ${e.org?`<div class="eorg">${e.org}</div>`:''}
+          ${e.tags.length?`<div class="etags">${e.tags.map(t=>`<span class="etag">${t}</span>`).join('')}</div>`:''}
+          ${e.note?`<div class="enote">${e.note}</div>`:''}
+          <div class="ebtns">
+            <button class="eebtn ed" onclick="editEntry('${e.id}')"><i class="ti ti-edit"></i> 수정</button>
+            <button class="eebtn dl" onclick="deleteEntry('${e.id}')"><i class="ti ti-trash"></i> 삭제</button>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="eamt">${toMan(e.amount)}</div>
+          <div class="eamt2">${toWon(e.amount)}</div>
+        </div>
+      </div>`).join('')
+    + `<div style="text-align:center;font-size:12px;color:var(--muted);padding:10px 0">
+        ${list.length}건 · 합계 ${toMan(filtTot)}</div>`;
+}
+
+/* ── ANALYTICS ──────────────────────────────────────────────────────────── */
+function renderAnalytics() {
+  const tot = entries.reduce((s,e)=>s+e.amount,0);
+  const cnt = entries.length;
+  const avg = cnt ? Math.round(tot/cnt) : 0;
+  const max = cnt ? Math.max(...entries.map(e=>e.amount)) : 0;
+  $('aTotal').textContent = toMan(tot); $('aCnt').textContent = cnt+'명';
+  $('aAvg').textContent = toMan(avg); $('aMax').textContent = toMan(max);
+  const mkTbl = (rows, emptyMsg) => {
+    if(!rows.length) return `<div class="empty">${emptyMsg}</div>`;
+    const maxT = rows[0][1].t||1;
+    return `<div style="overflow-x:auto"><table class="dtbl">
+      <thead><tr><th>항목</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
+      <tbody>${rows.map(([k,d])=>`<tr>
+        <td>${k}<div class="bw"><div class="bf" style="width:${Math.round(d.t/maxT*100)}%"></div></div></td>
+        <td style="text-align:center">${d.c}명</td>
+        <td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(d.t)}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  };
+  /* org */
+  const byOrg={};
+  entries.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
+  $('aOrg').innerHTML = mkTbl(Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t), '소속 데이터 없음');
+  /* tag */
+  const byTag={};
+  entries.forEach(e=>{const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});});
+  const tagRows = Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t).map(([t,d])=>
+    [`<span style="background:var(--pale);color:var(--gold);padding:2px 7px;border-radius:20px;font-size:11px">${t}</span>`, d]);
+  $('aTag').innerHTML = tagRows.length ? `<div style="overflow-x:auto"><table class="dtbl">
+    <thead><tr><th>분류</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
+    <tbody>${tagRows.map(([k,d])=>`<tr><td>${k}</td><td style="text-align:center">${d.c}명</td><td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(d.t)}</td></tr>`).join('')}</tbody></table></div>`
+    : '<div class="empty">태그 없음</div>';
+  /* bracket */
+  const bkts = BRACKETS.map(b=>({...b,c:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).length,t:entries.filter(e=>e.amount>=b.min&&e.amount<=b.max).reduce((s,e)=>s+e.amount,0)})).filter(b=>b.c>0);
+  $('aBkt').innerHTML = bkts.length ? `<div style="overflow-x:auto"><table class="dtbl">
+    <thead><tr><th>금액대</th><th style="text-align:center;width:56px">인원</th><th style="text-align:right;width:80px">합계</th></tr></thead>
+    <tbody>${bkts.map(b=>`<tr><td>${b.l}</td><td style="text-align:center">${b.c}명</td><td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(b.t)}</td></tr>`).join('')}</tbody></table></div>`
+    : '<div class="empty">데이터 없음</div>';
+}
+
+/* ── PRINT / PDF ────────────────────────────────────────────────────────── */
+function renderPrint() {
+  const sorted = [...entries].sort((a,b)=>b.amount-a.amount);
+  const tot = entries.reduce((s,e)=>s+e.amount,0);
+  $('printPreview').innerHTML = buildPrintHTML(sorted, tot, true);
+}
+function buildPrintHTML(sorted, tot, preview=false) {
+  const rowStyle = preview ? '' : '';
+  return `
+    <div style="text-align:center;margin-bottom:15px;padding-bottom:12px;border-bottom:2px solid var(--pale)">
+      <div style="font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold)">
+        ${W.groom} · ${W.bride} 결혼식 축의금
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">
+        ${W.date} · 총 ${entries.length}명 · ${toWon(tot)}
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="dtbl" style="min-width:480px">
+        <thead><tr>
+          <th style="width:28px">번</th><th>이름</th><th>소속</th>
+          <th style="text-align:right">금액</th><th>분류</th><th>비고</th>
+        </tr></thead>
+        <tbody>${sorted.map((e,i)=>`<tr>
+          <td style="color:var(--muted)">${i+1}</td>
+          <td style="font-weight:700">${e.name}</td>
+          <td style="color:var(--muted)">${e.org||'-'}</td>
+          <td style="text-align:right;font-weight:700;color:var(--gold)">${toMan(e.amount)}</td>
+          <td style="font-size:11px">${e.tags.join(', ')||'-'}</td>
+          <td style="font-size:11px;color:var(--muted)">${e.note||''}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;background:var(--paleb);border-radius:9px;padding:12px;
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
+      <div><span style="color:var(--muted)">총 인원 </span><strong>${entries.length}명</strong></div>
+      <div><span style="color:var(--muted)">총 금액 </span><strong>${toWon(tot)}</strong></div>
+      <div><span style="color:var(--muted)">평균 </span><strong>${entries.length?toWon(Math.round(tot/entries.length)):'0원'}</strong></div>
+    </div>`;
+}
+
+$('btnPrint').addEventListener('click', () => {
+  const sorted = [...entries].sort((a,b)=>b.amount-a.amount);
+  const tot = entries.reduce((s,e)=>s+e.amount,0);
+  $('printview').innerHTML = `<div style="font-family:'Noto Sans KR',sans-serif;padding:24px">
+    <div style="text-align:center;margin-bottom:20px">
+      <h1 style="font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#7B5B1A">
+        ${W.groom} · ${W.bride} 결혼식 축의금
+      </h1>
+      <p style="font-size:12px;color:#8A7560;margin-top:4px">${W.date} · 총 ${entries.length}명 · ${toWon(tot)}</p>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead><tr style="background:#7B5B1A;color:#fff">
+        ${['번호','이름','소속','금액','분류','비고'].map(h=>`<th style="padding:8px;text-align:left;border:1px solid #ccc">${h}</th>`).join('')}
+      </tr></thead>
+      <tbody>${sorted.map((e,i)=>`<tr>
+        <td style="padding:6px 8px;border:1px solid #ddd;color:#8A7560">${i+1}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:700">${e.name}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;color:#8A7560">${e.org||'-'}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:700;color:#9A6E1A">${toMan(e.amount)}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;font-size:10px">${e.tags.join(', ')||'-'}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;font-size:10px;color:#8A7560">${e.note||''}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div style="margin-top:14px;padding:12px;background:#F5EDD8;border-radius:8px;font-size:12px">
+      <strong>합계:</strong> 총 ${entries.length}명 · ${toWon(tot)} · 평균 ${entries.length?toWon(Math.round(tot/entries.length)):'0원'}
+    </div>
+  </div>`;
+  setTimeout(()=>window.print(), 300);
+});
+
+/* ── EXCEL ──────────────────────────────────────────────────────────────── */
+$('btnXlsx').addEventListener('click', () => {
+  if (!window.XLSX) { notify('라이브러리를 로딩 중입니다. 잠시 후 다시 시도해주세요.', true); return; }
+  const rows = entries.map((e,i)=>({
+    '번호':i+1,'이름':e.name,'소속':e.org||'','금액(원)':e.amount,
+    '금액(만원)':e.amount/10000,'태그':e.tags.join(', '),'비고':e.note||'',
+    '등록시간':new Date(e.createdAt).toLocaleString('ko-KR')
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [6,14,16,12,12,18,22,20].map(w=>({wch:w}));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '축의금 목록');
+  /* summary sheet */
+  const tot = entries.reduce((s,e)=>s+e.amount,0), cnt = entries.length;
+  const sm = [[`${W.groom}·${W.bride} 결혼식 축의금`],[''],
+    ['총 인원',cnt],['총 금액',tot],['평균',cnt?Math.round(tot/cnt):0],[''],[],
+    ['▌ 소속별 현황'],['소속','인원','합계(원)']];
+  const byOrg={};
+  entries.forEach(e=>{const k=e.org||'소속없음';byOrg[k]=byOrg[k]||{c:0,t:0};byOrg[k].c++;byOrg[k].t+=e.amount;});
+  Object.entries(byOrg).sort((a,b)=>b[1].t-a[1].t).forEach(([o,d])=>sm.push([o,d.c,d.t]));
+  sm.push([],['▌ 태그별 현황'],['태그','인원','합계(원)']);
+  const byTag={};
+  entries.forEach(e=>{const ts=e.tags.length?e.tags:['미분류'];ts.forEach(t=>{byTag[t]=byTag[t]||{c:0,t:0};byTag[t].c++;byTag[t].t+=e.amount;});});
+  Object.entries(byTag).sort((a,b)=>b[1].t-a[1].t).forEach(([t,d])=>sm.push([t,d.c,d.t]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(sm), '분석');
+  const dt = new Date().toLocaleDateString('ko-KR').replace(/\. /g,'').replace('.','');
+  XLSX.writeFile(wb, `축의금_${W.groom}${W.bride}_${dt}.xlsx`);
+  notify('엑셀 파일 다운로드 완료');
+});
+
+/* ── GITHUB GIST ─────────────────────────────────────────────────────────── */
+$('btnNewGist').addEventListener('click', async () => {
+  const tok = $('sGhTok').value.trim();
+  if (!tok) { notify('GitHub Token을 입력해주세요', true); return; }
+  try {
+    const r = await fetch('https://api.github.com/gists', {
+      method:'POST',
+      headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},
+      body: JSON.stringify({
+        description:`${W.groom}·${W.bride} 결혼식 축의금`,
+        public:false,
+        files:{'wedding-gift-data.json':{content:JSON.stringify([],null,2)}}
+      })
+    });
+    const d = await r.json();
+    if (d.id) { $('sGistId').value=d.id; notify('Gist 생성 완료 — ID: '+d.id); }
+    else notify('생성 실패: '+r.status, true);
+  } catch { notify('GitHub 연결 실패', true); }
+});
+$('btnSaveGist').addEventListener('click', async () => {
+  const tok=$('sGhTok').value.trim(), gid=$('sGistId').value.trim();
+  if (!tok||!gid) { notify('Token과 Gist ID를 입력해주세요', true); return; }
+  try {
+    const r = await fetch(`https://api.github.com/gists/${gid}`, {
+      method:'PATCH',
+      headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},
+      body: JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})
+    });
+    notify(r.ok ? '✓ GitHub에 저장되었습니다' : 'GitHub 저장 실패', !r.ok);
+  } catch { notify('GitHub 연결 실패', true); }
+});
+$('btnLoadGist').addEventListener('click', async () => {
+  const tok=$('sGhTok').value.trim(), gid=$('sGistId').value.trim();
+  if (!tok||!gid) { notify('Token과 Gist ID를 입력해주세요', true); return; }
+  try {
+    const r = await fetch(`https://api.github.com/gists/${gid}`, {
+      headers:{'Authorization':`token ${tok}`}
+    });
+    const d = await r.json();
+    const content = d.files?.['wedding-gift-data.json']?.content;
+    if (content) {
+      entries = JSON.parse(content); persist(); refreshAll();
+      notify(`✓ ${entries.length}건을 불러왔습니다`);
+    } else notify('데이터 없음', true);
+  } catch { notify('불러오기 실패', true); }
+});
+
+/* ── GOOGLE SHEETS ──────────────────────────────────────────────────────── */
+$('btnCopy').addEventListener('click', () => {
+  navigator.clipboard.writeText(SCRIPT).then(()=>notify('✓ 코드가 복사되었습니다'));
+});
+$('btnSyncNow').addEventListener('click', () => syncSheets());
+async function syncSheets(data) {
+  const url = $('sSheetsUrl').value.trim() || settings.sheetsUrl;
+  if (!url) { notify('Sheets URL을 입력해주세요', true); return; }
+  try {
+    await fetch(url, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'sync',data:data||entries})});
+    notify('✓ 구글 시트에 동기화되었습니다');
+  } catch { notify('Sheets 연결 실패', true); }
+}
+
+/* ── SETTINGS SAVE ──────────────────────────────────────────────────────── */
+$('btnSave').addEventListener('click', () => {
+  settings = {ghToken:$('sGhTok').value.trim(), gistId:$('sGistId').value.trim(),
+    sheetsUrl:$('sSheetsUrl').value.trim(), customTags:$('sCustomTags').value.trim()};
+  localStorage.setItem('wgSettings', JSON.stringify(settings));
+  buildTags([]); notify('✓ 설정이 저장되었습니다');
+});
+$('btnClear').addEventListener('click', () => {
+  if (!confirm(`전체 ${entries.length}건을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  entries=[]; persist(); refreshAll(); notify('초기화 완료');
+});
+$('btnJsonBackup').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(entries,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `wg_backup_${new Date().toLocaleDateString('ko-KR').replace(/\./g,'').replace(/ /g,'')}.json`;
+  a.click(); notify('JSON 백업 다운로드');
+});
+
+/* ── AUTO SYNC ──────────────────────────────────────────────────────────── */
+function autoSync() {
+  if (settings.ghToken && settings.gistId) {
+    fetch(`https://api.github.com/gists/${settings.gistId}`, {
+      method:'PATCH',
+      headers:{'Authorization':`token ${settings.ghToken}`,'Content-Type':'application/json'},
+      body: JSON.stringify({files:{'wedding-gift-data.json':{content:JSON.stringify(entries,null,2)}}})
+    }).then(r=>{ if(r.ok) showSync('GitHub ✓'); }).catch(()=>{});
+  }
+  if (settings.sheetsUrl) {
+    fetch(settings.sheetsUrl, {method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'sync',data:entries})}).catch(()=>{});
+  }
+}
+</script>
+</body>
+</html>
